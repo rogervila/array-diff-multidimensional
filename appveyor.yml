@@ -1,0 +1,40 @@
+build: false
+shallow_clone: true
+clone_folder: c:\projects\arraydiffmultidimensional
+platform:
+  - x86
+  - x64
+
+environment:
+  global:
+    PHP: "C:/PHP"
+
+branches:
+  only:
+    - master
+
+init:
+  - SET PATH=C:\php\;%PATH%
+
+install:
+  - cd c:\
+  - appveyor DownloadFile http://windows.php.net/downloads/releases/archives/php-5.6.28-nts-Win32-VC11-x86.zip -FileName php.zip
+  - 7z x php.zip -oc:\php
+  - cd c:\php
+  - copy php.ini-production php.ini
+  - echo date.timezone="UTC" >> php.ini
+  - echo extension_dir=ext >> php.ini
+  - echo extension=php_openssl.dll >> php.ini
+  - echo extension=php_sqlsrv_55_nts.dll >> php.ini
+  - echo extension=php_pdo_sqlsrv_55_nts.dll >> php.ini
+  - echo extension=php_intl.dll >> php.ini
+  - echo extension=php_mbstring.dll >> php.ini
+  - echo extension=php_fileinfo.dll >> php.ini
+  - cd C:\projects\arraydiffmultidimensional
+  - appveyor DownloadFile https://getcomposer.org/composer.phar
+  - php composer.phar install --prefer-dist --no-interaction --ansi --no-progress
+  - php -i | grep "ICU version"
+
+test_script:
+  - cd C:\projects\arraydiffmultidimensional
+  - vendor\bin\phpunit.bat
