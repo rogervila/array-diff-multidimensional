@@ -75,8 +75,6 @@ class ArrayCompareTest extends \PHPUnit_Framework_TestCase
 			],
 		];
 
-		var_dump($this->diff::compare($new,$old));
-
 		$this->assertEquals( count($this->diff::compare($new,$old)), 1 );
 		$this->assertTrue( isset($this->diff::compare($new,$old)['c']['f']) );
 	}
