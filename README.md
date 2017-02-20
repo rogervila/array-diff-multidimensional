@@ -1,5 +1,10 @@
 # Array Diff Multidimensional
 
+[![Build Status](https://travis-ci.org/rogervila/array-diff-multidimensional.svg?branch=master)](https://travis-ci.org/rogervila/array-diff-multidimensional)
+[![Build status](https://ci.appveyor.com/api/projects/status/wues2pcnb6s07bbl?svg=true)](https://ci.appveyor.com/project/roger-vila/array-diff-multidimensional)
+[![Code Climate](https://codeclimate.com/github/rogervila/array-diff-multidimensional/badges/gpa.svg)](https://codeclimate.com/github/rogervila/array-diff-multidimensional)
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/0d8faa82-5cd3-44dd-9759-a8a1b7b55fce/big.png)](https://insight.sensiolabs.com/projects/0d8faa82-5cd3-44dd-9759-a8a1b7b55fce)
+
 Works like the [PHP array_diff()](http://php.net/manual/es/function.array-diff.php) function, but with multidimensional arrays.
 
 ## Install
