@@ -19,7 +19,7 @@ init:
 install:
   - cd c:\
   - appveyor DownloadFile http://windows.php.net/downloads/releases/archives/php-7.0.15-nts-Win32-VC14-x86.zip -FileName php.zip
-  - 7z x php.zip -o c:\php
+  - 7z x php.zip -oc:\php
   - cd c:\php
   - copy php.ini-production php.ini
   - echo date.timezone="UTC" >> php.ini
