@@ -23,7 +23,7 @@ class ArrayDiffMultidimensional {
 			}
 
 			if (is_array($value)) {
-				$recursiveArrayDiff = self::compare($value, $array2[$key]);
+				$recursiveArrayDiff = static::compare($value, $array2[$key]);
 
 				if (count($recursiveArrayDiff)) {
 					$result[$key] = $recursiveArrayDiff;
