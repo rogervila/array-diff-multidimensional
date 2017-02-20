@@ -16,7 +16,7 @@ class ArrayCompareTest extends \PHPUnit_Framework_TestCase
 	/** @test */
 	public function returnsAnArray()
 	{
-		$this->assertTrue( is_array($this->diff::compare([],[])) );
+		$this->assertTrue( is_array($this->diff->compare([],[])) );
 	}
 
 	/** @test */
@@ -32,8 +32,8 @@ class ArrayCompareTest extends \PHPUnit_Framework_TestCase
 			'c' => uniqid(),
 		];
 
-		$this->assertEquals( count($this->diff::compare($new,$old)), 1 );
-		$this->assertTrue( isset($this->diff::compare($new,$old)['c']) );
+		$this->assertEquals( count($this->diff->compare($new,$old)), 1 );
+		$this->assertTrue( isset($this->diff->compare($new,$old)['c']) );
 	}
 
 	/** @test */
@@ -52,8 +52,8 @@ class ArrayCompareTest extends \PHPUnit_Framework_TestCase
 			'c' => uniqid(),
 		];
 
-		$this->assertEquals( count($this->diff::compare($new,$old)), 1 );
-		$this->assertTrue( is_array($this->diff::compare($new,$old)['c']) );
+		$this->assertEquals( count($this->diff->compare($new,$old)), 1 );
+		$this->assertTrue( is_array($this->diff->compare($new,$old)['c']) );
 	}
 
 	/** @test */
@@ -75,7 +75,7 @@ class ArrayCompareTest extends \PHPUnit_Framework_TestCase
 			],
 		];
 
-		$this->assertEquals( count($this->diff::compare($new,$old)), 1 );
-		$this->assertTrue( isset($this->diff::compare($new,$old)['c']['f']) );
+		$this->assertEquals( count($this->diff->compare($new,$old)), 1 );
+		$this->assertTrue( isset($this->diff->compare($new,$old)['c']['f']) );
 	}
 }
