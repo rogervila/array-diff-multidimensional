@@ -5,6 +5,11 @@ php:
   - 5.6
   - 7.0
   - 7.1
+  - 7.2
+  
+addons:
+  sonarcloud:
+    organization: "test" # the key of the org you chose at step #3
 
 cache:
   directories:
@@ -17,4 +22,6 @@ before_script:
   - curl -s http://getcomposer.org/installer | php
   - php -n composer.phar install --dev --verbose
 
-script: phpunit
+script: 
+  - phpunit
+  - sonar-scanner
