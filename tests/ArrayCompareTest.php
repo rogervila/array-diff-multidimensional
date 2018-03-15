@@ -78,4 +78,25 @@ class ArrayCompareTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals( count($this->diff->compare($new,$old)), 1 );
 		$this->assertTrue( isset($this->diff->compare($new,$old)['c']['f']) );
 	}
+
+    /** @test */
+    public function DifferenceFail()
+    {
+        $new = [
+            'a' => 'b',
+            'c' => [
+                'd' => 'e',
+            ],
+        ];
+
+        $old = [
+            'a' => 'b',
+            'c' => [
+                'd' => 'e',
+                'f' => uniqid(),
+            ],
+        ];
+
+        $this->assertNotEquals( 1, count($this->diff->compare($new,$old)) );
+    }
 }
