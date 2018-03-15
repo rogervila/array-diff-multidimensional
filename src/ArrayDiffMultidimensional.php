@@ -6,18 +6,25 @@ class ArrayDiffMultidimensional
 {
 
     /**
-     * Returns an array with the differences between $array1 and $array2
-     *
-     * @param array $aArray1
-     * @param array $aArray2
+     * Returns an array with the differences between $array1 and $array2.
+     * Compares array1 against one or more other arrays and returns the values in array1
+     * that are not present in any of the other arrays.
+     * @param mixed $array1
+     * @param mixed $array2
      * @return array
+     * @internal param array $aArray1
+     * @internal param array $aArray2
      */
     public static function compare($array1, $array2)
     {
         $result = array();
 
+        if (!is_array($array2)) {
+            return $array1;
+        }
+
         foreach ($array1 as $key => $value) {
-            if (!is_array($array2) || !array_key_exists($key, $array2)) {
+            if (!array_key_exists($key, $array2)) {
                 $result[$key] = $value;
                 continue;
             }
