@@ -118,4 +118,21 @@ class ArrayCompareTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($old, $this->diff->compare($old, $new));
     }
+
+    /**
+     * @test
+     * @expectedException \PHPUnit_Framework_Error
+     */
+    public function FirstArgumentIsNotArray()
+    {
+        $old = null;
+        $new = [
+            'a' => 'b',
+            'c' => [
+                'd' => 'e',
+            ],
+        ];
+
+        $this->assertEquals($new, $this->diff->compare($old, $new));
+    }
 }
