@@ -6,9 +6,9 @@ class ArrayDiffMultidimensional
 {
 
     /**
-     * Returns an array with the differences between $array1 and $array2.
-     * Compares array1 against one or more other arrays and returns the values in array1
-     * that are not present in any of the other arrays.
+     * Returns an array with items that are present in first array,
+     * but not in the second one. If second argument is not
+     * array first array is returned.
      * @param mixed $array1
      * @param mixed $array2
      * @return array
