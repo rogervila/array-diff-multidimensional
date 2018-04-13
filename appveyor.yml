@@ -6,9 +6,6 @@ platform:
 
 clone_folder: c:\projects\arraydiffmultidimensional
 
-cache:
-  - c:\php -> appveyor.yml
-
 environment:
   matrix:
     - PHP_DOWNLOAD_FILE: php-5.5.9-nts-Win32-VC11-x86.zip
