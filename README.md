@@ -19,6 +19,8 @@ composer require rogervila/array-diff-multidimensional
 ## Usage
 
 ```php
+use Rogervila\ArrayDiffMultidimensional;
+
 $new = [
 	'a' => 'b',
 	'c' => [
