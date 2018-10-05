@@ -16,8 +16,12 @@ class ArrayDiffMultidimensional
     {
         $result = array();
 
+        if (!is_array($array2)) {
+            return $array1;
+        }
+
         foreach ($array1 as $key => $value) {
-            if (!is_array($array2) || !array_key_exists($key, $array2)) {
+            if (!array_key_exists($key, $array2)) {
                 $result[$key] = $value;
                 continue;
             }
