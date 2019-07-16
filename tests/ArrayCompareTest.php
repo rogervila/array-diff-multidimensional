@@ -3,24 +3,23 @@
 namespace Rogervila\Test;
 
 use Rogervila\ArrayDiffMultidimensional;
+use PHPUnit\Framework\TestCase;
 
-class ArrayCompareTest extends \PHPUnit_Framework_TestCase
+class ArrayCompareTest extends TestCase
 {
 	protected $diff;
 
-	public function setUp()
+	protected function setUp()
 	{
 		$this->diff = new ArrayDiffMultidimensional();
 	}
 
-	/** @test */
-	public function returnsAnArray()
+	public function testReturnsAnArray()
 	{
-		$this->assertTrue( is_array($this->diff->compare([],[])) );
+		$this->assertTrue(is_array($this->diff->compare([], [])));
 	}
 
-	/** @test */
-	public function DetectsTheDifferenceOnStringValue()
+	public function testDetectsTheDifferenceOnStringValue()
 	{
 		$old = [
 			'a' => 'b',
@@ -32,12 +31,11 @@ class ArrayCompareTest extends \PHPUnit_Framework_TestCase
 			'c' => uniqid(),
 		];
 
-		$this->assertEquals( count($this->diff->compare($new,$old)), 1 );
-		$this->assertTrue( isset($this->diff->compare($new,$old)['c']) );
+		$this->assertEquals(count($this->diff->compare($new, $old)), 1);
+		$this->assertTrue(isset($this->diff->compare($new, $old)['c']));
 	}
 
-	/** @test */
-	public function DetectsChangeFromStringToArray()
+	public function testDetectsChangeFromStringToArray()
 	{
 		$new = [
 			'a' => 'b',
@@ -52,12 +50,11 @@ class ArrayCompareTest extends \PHPUnit_Framework_TestCase
 			'c' => uniqid(),
 		];
 
-		$this->assertEquals( count($this->diff->compare($new,$old)), 1 );
-		$this->assertTrue( is_array($this->diff->compare($new,$old)['c']) );
+		$this->assertEquals(count($this->diff->compare($new, $old)), 1);
+		$this->assertTrue(is_array($this->diff->compare($new, $old)['c']));
 	}
 
-	/** @test */
-	public function DetectsChangesOnNestedArrays()
+	public function testDetectsChangesOnNestedArrays()
 	{
 		$new = [
 			'a' => 'b',
@@ -75,7 +72,7 @@ class ArrayCompareTest extends \PHPUnit_Framework_TestCase
 			],
 		];
 
-		$this->assertEquals( count($this->diff->compare($new,$old)), 1 );
-		$this->assertTrue( isset($this->diff->compare($new,$old)['c']['f']) );
+		$this->assertEquals(count($this->diff->compare($new, $old)), 1);
+		$this->assertTrue(isset($this->diff->compare($new, $old)['c']['f']));
 	}
 }
