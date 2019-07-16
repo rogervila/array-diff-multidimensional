@@ -9,11 +9,9 @@ cache:
   directories:
     - $HOME/.composer/cache
 
-before_install:
-  - sudo apt-get update -qq
-
 before_script:
   - curl -s http://getcomposer.org/installer | php
-  - php -n composer.phar install --dev --verbose
+  - php composer.phar install --dev
 
-script: phpunit
+script:
+  - vendor/bin/phpunit
