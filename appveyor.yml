@@ -1,45 +1,43 @@
 build: false
-
-platform: x86
-
-clone_folder: c:\projects\arraydiffmultidimensional
+version: appveyor-{branch}-{build}
+shallow_clone: false
+clone_folder: C:\projects\app
 
 environment:
-  matrix:
-    - PHP_DOWNLOAD_FILE: php-5.5.9-nts-Win32-VC11-x86.zip
-    - PHP_DOWNLOAD_FILE: php-5.6.4-nts-Win32-VC11-x86.zip
-    - PHP_DOWNLOAD_FILE: php-7.0.0-nts-Win32-VC14-x86.zip
-    - PHP_DOWNLOAD_FILE: php-7.1.0-nts-Win32-VC14-x86.zip
+    matrix:
+        - php_ver: 7.3.1
+        - php_ver: 7.2.14
+        - php_ver: 7.1.26
+
+cache:
+    - '%APPDATA%\Composer'
+    - '%LOCALAPPDATA%\Composer'
+    - C:\tools\php -> .appveyor.yml
+    - C:\tools\composer.phar -> .appveyor.yml
 
 init:
-  - SET PATH=c:\php;%PATH%
-  - SET COMPOSER_NO_INTERACTION=1
-  - SET PHP=1
+    - SET PATH=C:\tools\php;%PATH%
 
 install:
-  - IF EXIST c:\php (SET PHP=0) ELSE (mkdir c:\php)
-  - cd c:\php
-  - IF %PHP%==1 appveyor DownloadFile https://raw.githubusercontent.com/symfony/binary-utils/master/cacert.pem
-  - IF %PHP%==1 appveyor DownloadFile http://windows.php.net/downloads/releases/archives/%PHP_DOWNLOAD_FILE%
-  - IF %PHP%==1 7z x %PHP_DOWNLOAD_FILE% -y >nul
-  - IF %PHP%==1 del /Q *.zip
-  - IF %PHP%==1 echo @php %%~dp0composer.phar %%* > composer.bat
-  - IF %PHP%==1 copy /Y php.ini-development php.ini
-  - IF %PHP%==1 echo max_execution_time=1200 >> php.ini
-  - IF %PHP%==1 echo date.timezone="UTC" >> php.ini
-  - IF %PHP%==1 echo extension_dir=ext >> php.ini
-  - IF %PHP%==1 echo extension=php_curl.dll >> php.ini
-  - IF %PHP%==1 echo extension=php_openssl.dll >> php.ini
-  - IF %PHP%==1 echo extension=php_intl.dll >> php.ini
-  - IF %PHP%==1 echo extension=php_mbstring.dll >> php.ini
-  - IF %PHP%==1 echo extension=php_fileinfo.dll >> php.ini
-  - IF %PHP%==1 echo extension=php_pdo_sqlite.dll >> php.ini
-  - IF %PHP%==1 echo curl.cainfo=c:\php\cacert.pem >> php.ini
-  - appveyor DownloadFile https://getcomposer.org/composer.phar
-  - cd c:\projects\arraydiffmultidimensional
-  - mkdir %APPDATA%\Composer
-  - composer update --prefer-dist --no-progress --ansi
+    - ps: Set-Service wuauserv -StartupType Manual
+    - IF NOT EXIST C:\tools\php (choco install --yes --allow-empty-checksums php --version %php_ver% --params '/InstallDir:C:\tools\php')
+    - cd C:\tools\php
+    - copy php.ini-production php.ini
+    - echo date.timezone="UTC" >> php.ini
+    - echo memory_limit=512M >> php.ini
+    - echo extension_dir=ext >> php.ini
+    - echo extension=php_curl.dll >> php.ini
+    - echo extension=php_openssl.dll >> php.ini
+    - echo extension=php_mbstring.dll >> php.ini
+    - IF NOT EXIST C:\tools\composer.phar (cd C:\tools && appveyor DownloadFile https://getcomposer.org/composer.phar)
+    - php C:\tools\composer.phar --version
+    - cd C:\projects\app
+
+before_test:
+    - cd C:\projects\app
+    - php C:\tools\composer.phar update --optimize-autoloader --no-interaction --no-progress --prefer-stable --no-ansi
+    - php C:\tools\composer.phar info -D | sort
 
 test_script:
-  - cd c:\projects\arraydiffmultidimensional
-  - vendor\bin\phpunit.bat --verbose
+    - cd C:\projects\app
+    - vendor\bin\phpunit
