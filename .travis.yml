@@ -15,3 +15,9 @@ before_script:
 
 script:
   - vendor/bin/phpunit
+
+addons:
+  sonarcloud:
+    organization: "rogervila-github"
+    token:
+      secure: "bw+wwJuiGO55o+ebl8AG0Dl5lyFPbm1YacMBLQK8/yYjOUB+51ENzC0Fo2Zv5addwBPqI+XT0IPo36xTQuYlyz+RZtoK9PCUs9AkXAx86MQuZYya4eQuOSBqGnLEfXo0jTFUgO10EeMeeG8Pc5jcTRYg+/mOWOPqgaCMg9udM3ZnrkRu6tc1LhecoBBgqCXZ34z3/kR26wuzk5OuEhW3/SWNVdRyneu4AFMroEN+0+Rl76NBsC+PvFW3E3hCngM5DKDwt+lTjio+EKFWUvLBQaQVtnCA4ykwaIpt0hFOuIl76LebeceCf+ejRu0M7K1RkEmHmv0JIkQMIjL2I/IeB3WJlI4llo6yuwY8pUVz4A+iMFAVRdvA0jYS9xkkDi1vjIQnzTDcOEdF+QvMpVPf1Nu9867hbQ675KLLYGkNDQET2UoNewnwUM/Ye764AKo9rL2hs6xKxrZgI7qa4UQDjyfXeIMmd5NYVuEyUH4amhtkcwe3RJlXouXXoEYtjupLwbVk8TIB7Z/CBBSR3tgRea5s+bB9VeOGMAKeT7dgcQWOOctKwGvl0uFXpLfCqcaTE1lsYeS6KUWHREv/Ua1pJzuv3J0iB3ZKCAPNZjEUrh8T/4jwNoDAKSu1dvgnTIECo3Pi5tOl3+DG7lf0QL7A0PYiY4wSz5VL9+ujgy6RBmU="
