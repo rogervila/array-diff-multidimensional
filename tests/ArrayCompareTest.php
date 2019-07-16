@@ -7,20 +7,17 @@ use PHPUnit\Framework\TestCase;
 
 class ArrayCompareTest extends TestCase
 {
-	protected $diff;
-
-	protected function setUp()
-	{
-		$this->diff = new ArrayDiffMultidimensional();
-	}
-
 	public function testReturnsAnArray()
 	{
-		$this->assertTrue(is_array($this->diff->compare([], [])));
+		$diff = new ArrayDiffMultidimensional();
+
+		$this->assertTrue(is_array($diff->compare([], [])));
 	}
 
 	public function testDetectsTheDifferenceOnStringValue()
 	{
+		$diff = new ArrayDiffMultidimensional();
+
 		$old = [
 			'a' => 'b',
 			'c' => uniqid(),
@@ -31,12 +28,14 @@ class ArrayCompareTest extends TestCase
 			'c' => uniqid(),
 		];
 
-		$this->assertEquals(count($this->diff->compare($new, $old)), 1);
-		$this->assertTrue(isset($this->diff->compare($new, $old)['c']));
+		$this->assertEquals(count($diff->compare($new, $old)), 1);
+		$this->assertTrue(isset($diff->compare($new, $old)['c']));
 	}
 
 	public function testDetectsChangeFromStringToArray()
 	{
+		$diff = new ArrayDiffMultidimensional();
+
 		$new = [
 			'a' => 'b',
 			'c' => [
@@ -50,12 +49,14 @@ class ArrayCompareTest extends TestCase
 			'c' => uniqid(),
 		];
 
-		$this->assertEquals(count($this->diff->compare($new, $old)), 1);
-		$this->assertTrue(is_array($this->diff->compare($new, $old)['c']));
+		$this->assertEquals(count($diff->compare($new, $old)), 1);
+		$this->assertTrue(is_array($diff->compare($new, $old)['c']));
 	}
 
 	public function testDetectsChangesOnNestedArrays()
 	{
+		$diff = new ArrayDiffMultidimensional();
+
 		$new = [
 			'a' => 'b',
 			'c' => [
@@ -72,7 +73,7 @@ class ArrayCompareTest extends TestCase
 			],
 		];
 
-		$this->assertEquals(count($this->diff->compare($new, $old)), 1);
-		$this->assertTrue(isset($this->diff->compare($new, $old)['c']['f']));
+		$this->assertEquals(count($diff->compare($new, $old)), 1);
+		$this->assertTrue(isset($diff->compare($new, $old)['c']['f']));
 	}
 }
