@@ -32,7 +32,7 @@ jobs:
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
 
-      - run: composer install -n --prefer-dist
+      - run: composer selfupdate && composer install -n --prefer-dist
 
       - save_cache:
           key: v1-dependencies-{{ checksum "composer.json" }}
@@ -45,5 +45,5 @@ jobs:
 
       # run tests with phpunit or codecept
       - run: ./vendor/bin/phpunit
-      - run: ./vendor/bin/codecept build
-      - run: ./vendor/bin/codecept run
+      # - run: ./vendor/bin/codecept build
+      # - run: ./vendor/bin/codecept run
