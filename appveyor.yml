@@ -22,7 +22,6 @@ init:
 install:
   - IF EXIST c:\php (SET PHP=0) ELSE (mkdir c:\php)
   - cd c:\php
-  - IF %PHP%==1 appveyor DownloadFile https://raw.githubusercontent.com/symfony/binary-utils/master/cacert.pem
   - IF %PHP%==1 appveyor DownloadFile http://windows.php.net/downloads/releases/archives/%PHP_DOWNLOAD_FILE%
   - IF %PHP%==1 7z x %PHP_DOWNLOAD_FILE% -y >nul
   - IF %PHP%==1 del /Q *.zip
