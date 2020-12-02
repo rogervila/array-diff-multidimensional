@@ -152,4 +152,44 @@ class ArrayCompareTest extends TestCase
         $this->assertEquals($diff->compare($new, $old)['a'], 'b');
         $this->assertFalse(isset($diff->compare($new, $old)['c']));
     }
+
+    /** @test */
+    public function it_works_with_deep_levels()
+    {
+        $diff = new ArrayDiffMultidimensional();
+
+        $old = [
+            'a' => 'b',
+            'c' => [
+                'd' => [
+                    'e' => [
+                        'f' => [
+                            'g' => [
+                                'h' => 'old'
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+        ];
+
+        $new = [
+            'a' => 'b',
+            'c' => [
+                'd' => [
+                    'e' => [
+                        'f' => [
+                            'g' => [
+                                'h' => 'new'
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+        ];
+
+        $this->assertEquals(count($diff->compare($new, $old)), 1);
+        $this->assertEquals($diff->compare($new, $old)['c']['d']['e']['f']['g']['h'], 'new');
+        $this->assertFalse(isset($diff->compare($new, $old)['a']));
+    }
 }
