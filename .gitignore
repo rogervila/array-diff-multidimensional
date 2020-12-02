@@ -1,5 +1,5 @@
 /vendor
 composer.lock
-.phpunit.result.cache
+*.cache
 clover.xml
 junit-logfile.xml
