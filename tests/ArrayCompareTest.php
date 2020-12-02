@@ -24,6 +24,26 @@ class ArrayCompareTest extends TestCase
     }
 
     /** @test */
+    public function it_does_not_change_if_second_argument_is_not_an_array()
+    {
+        $diff = new ArrayDiffMultidimensional();
+
+        $old = [
+            'a' => 'b',
+            'c' => [
+                'd' => 'e',
+                'ff' => [
+                    'test'
+                ]
+            ],
+        ];
+
+        $new = 'anything except an array';
+
+        $this->assertEquals($old, $diff->compare($old, $new));
+    }
+
+    /** @test */
     public function it_detects_the_difference_on_string_value()
     {
         $diff = new ArrayDiffMultidimensional();
@@ -110,5 +130,26 @@ class ArrayCompareTest extends TestCase
         $this->assertEquals(count($diff->compare($new, $old)), 1);
         $this->assertEquals($diff->compare($new, $old)['c'], $newfloat);
         $this->assertTrue(is_float($diff->compare($new, $old)['c']));
+    }
+
+    /** @test */
+    public function it_detects_floats_do_not_change()
+    {
+        $diff = new ArrayDiffMultidimensional();
+        $floatval = defined('PHP_FLOAT_MAX') ? PHP_FLOAT_MAX : 1.0000000000005;
+
+        $new = [
+            'a' => 'b',
+            'c' => $floatval,
+        ];
+
+        $old = [
+            'a' => 'd',
+            'c' => $floatval,
+        ];
+
+        $this->assertEquals(count($diff->compare($new, $old)), 1);
+        $this->assertEquals($diff->compare($new, $old)['a'], 'b');
+        $this->assertFalse(isset($diff->compare($new, $old)['c']));
     }
 }
