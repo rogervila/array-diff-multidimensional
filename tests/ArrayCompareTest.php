@@ -61,6 +61,7 @@ class ArrayCompareTest extends TestCase
         $this->assertEquals(count($diff->compare($new, $old)), 1);
         $this->assertTrue(isset($diff->compare($new, $old)['c']));
         $this->assertTrue(is_string($diff->compare($new, $old)['c']));
+        $this->assertFalse(isset($diff->compare($new, $old)['a']));
     }
 
     /** @test */
@@ -83,6 +84,7 @@ class ArrayCompareTest extends TestCase
 
         $this->assertEquals(count($diff->compare($new, $old)), 1);
         $this->assertTrue(is_array($diff->compare($new, $old)['c']));
+        $this->assertFalse(isset($diff->compare($new, $old)['a']));
     }
 
     /** @test */
@@ -108,6 +110,7 @@ class ArrayCompareTest extends TestCase
 
         $this->assertEquals(count($diff->compare($new, $old)), 1);
         $this->assertTrue(isset($diff->compare($new, $old)['c']['f']));
+        $this->assertFalse(isset($diff->compare($new, $old)['a']));
     }
 
     /** @test */
@@ -130,6 +133,7 @@ class ArrayCompareTest extends TestCase
         $this->assertEquals(count($diff->compare($new, $old)), 1);
         $this->assertEquals($diff->compare($new, $old)['c'], $newfloat);
         $this->assertTrue(is_float($diff->compare($new, $old)['c']));
+        $this->assertFalse(isset($diff->compare($new, $old)['a']));
     }
 
     /** @test */
