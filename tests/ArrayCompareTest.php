@@ -58,7 +58,7 @@ class ArrayCompareTest extends TestCase
             'c' => uniqid(),
         ];
 
-        $this->assertEquals(count($diff->compare($new, $old)), 1);
+        $this->assertEquals(1, count($diff->compare($new, $old)));
         $this->assertTrue(isset($diff->compare($new, $old)['c']));
         $this->assertTrue(is_string($diff->compare($new, $old)['c']));
         $this->assertFalse(isset($diff->compare($new, $old)['a']));
@@ -82,7 +82,7 @@ class ArrayCompareTest extends TestCase
             'c' => uniqid(),
         ];
 
-        $this->assertEquals(count($diff->compare($new, $old)), 1);
+        $this->assertEquals(1, count($diff->compare($new, $old)));
         $this->assertTrue(is_array($diff->compare($new, $old)['c']));
         $this->assertFalse(isset($diff->compare($new, $old)['a']));
     }
@@ -108,7 +108,7 @@ class ArrayCompareTest extends TestCase
             ],
         ];
 
-        $this->assertEquals(count($diff->compare($new, $old)), 1);
+        $this->assertEquals(1, count($diff->compare($new, $old)));
         $this->assertTrue(isset($diff->compare($new, $old)['c']['f']));
         $this->assertFalse(isset($diff->compare($new, $old)['a']));
     }
@@ -130,8 +130,8 @@ class ArrayCompareTest extends TestCase
             'c' => $oldfloat,
         ];
 
-        $this->assertEquals(count($diff->compare($new, $old)), 1);
-        $this->assertEquals($diff->compare($new, $old)['c'], $newfloat);
+        $this->assertEquals(1, count($diff->compare($new, $old)));
+        $this->assertEquals($newfloat, $diff->compare($new, $old)['c']);
         $this->assertTrue(is_float($diff->compare($new, $old)['c']));
         $this->assertFalse(isset($diff->compare($new, $old)['a']));
     }
@@ -152,8 +152,8 @@ class ArrayCompareTest extends TestCase
             'c' => $floatval,
         ];
 
-        $this->assertEquals(count($diff->compare($new, $old)), 1);
-        $this->assertEquals($diff->compare($new, $old)['a'], 'b');
+        $this->assertEquals(1, count($diff->compare($new, $old)));
+        $this->assertEquals('b', $diff->compare($new, $old)['a']);
         $this->assertFalse(isset($diff->compare($new, $old)['c']));
     }
 
@@ -192,8 +192,8 @@ class ArrayCompareTest extends TestCase
             ],
         ];
 
-        $this->assertEquals(count($diff->compare($new, $old)), 1);
-        $this->assertEquals($diff->compare($new, $old)['c']['d']['e']['f']['g']['h'], 'new');
+        $this->assertEquals(1, count($diff->compare($new, $old)));
+        $this->assertEquals('new', $diff->compare($new, $old)['c']['d']['e']['f']['g']['h']);
         $this->assertFalse(isset($diff->compare($new, $old)['a']));
     }
 }
