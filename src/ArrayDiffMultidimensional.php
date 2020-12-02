@@ -8,8 +8,8 @@ class ArrayDiffMultidimensional
     /**
      * Returns an array with the differences between $array1 and $array2
      *
-     * @param array $aArray1
-     * @param array $aArray2
+     * @param array $array1
+     * @param array $array2
      * @return array
      */
     public static function compare($array1, $array2)
@@ -32,7 +32,14 @@ class ArrayDiffMultidimensional
                 continue;
             }
 
-            if ($value != $array2[$key]) {
+            $value1 = $value;
+            $value2 = $array2[$key];
+            if (is_float($value1) || is_float($value2)) {
+                $value1 = (string)$value1;
+                $value2 = (string)$value2;
+            }
+
+            if ($value1 != $value2) {
                 $result[$key] = $value;
             }
         }
