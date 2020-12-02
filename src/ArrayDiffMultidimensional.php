@@ -14,6 +14,10 @@ class ArrayDiffMultidimensional
      */
     public static function compare($array1, $array2)
     {
+        if (!is_array($array1)) {
+            throw new \InvalidArgumentException('array1 must be an array!');
+        }
+
         $result = array();
 
         foreach ($array1 as $key => $value) {
