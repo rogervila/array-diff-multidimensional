@@ -17,10 +17,15 @@ class ArrayCompareTest extends TestCase
     /** @test */
     public function it_fails_if_first_argument_is_not_an_array()
     {
-        $this->expectException(\InvalidArgumentException::class);
-        $diff = new ArrayDiffMultidimensional();
+        if (method_exists($this, 'expectException')) {
+            $this->expectException(\InvalidArgumentException::class);
+            $diff = new ArrayDiffMultidimensional();
 
-        $diff->compare('this should be an array', 'whatever');
+            $diff->compare('this should be an array', 'whatever');
+        } else {
+            var_dump('Skipped since current PHPUnit version does not support expectException');
+            $this->assertTrue(true);
+        }
     }
 
     /** @test */
