@@ -4,12 +4,12 @@ namespace Rogervila;
 
 class ArrayDiffMultidimensional
 {
-
     /**
      * Returns an array with the differences between $array1 and $array2
      *
      * @param array $array1
      * @param array $array2
+     *
      * @return array
      */
     public static function compare($array1, $array2)
@@ -18,10 +18,14 @@ class ArrayDiffMultidimensional
             throw new \InvalidArgumentException('array1 must be an array!');
         }
 
+        if (!is_array($array2)) {
+            return $array1;
+        }
+
         $result = array();
 
         foreach ($array1 as $key => $value) {
-            if (!is_array($array2) || !array_key_exists($key, $array2)) {
+            if (!array_key_exists($key, $array2)) {
                 $result[$key] = $value;
                 continue;
             }
