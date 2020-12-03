@@ -50,9 +50,7 @@ class ArrayDiffMultidimensional
                 $value2 = (string) $value2;
             }
 
-            $check = $strict ? $value1 !== $value2 : $value1 != $value2;
-
-            if ($check) {
+            if ($strict ? $value1 !== $value2 : $value1 != $value2) {
                 $result[$key] = $value;
             }
         }
