@@ -201,4 +201,78 @@ class ArrayCompareTest extends TestCase
         $this->assertEquals('new', $diff->compare($new, $old)['c']['d']['e']['f']['g']['h']);
         $this->assertFalse(isset($diff->compare($new, $old)['a']));
     }
+
+    /** @test */
+    public function it_detects_new_array_items()
+    {
+        $diff = new ArrayDiffMultidimensional();
+        $value = 'this should be detected';
+
+        $new = [
+            'a' => 'b',
+            'c' => 'd',
+            'd' =>  $value,
+        ];
+
+        $old = [
+            'a' => 'b',
+            'c' => 'd',
+        ];
+
+        $this->assertEquals(1, count($diff->compare($new, $old)));
+        $this->assertTrue(isset($diff->compare($new, $old)['d']));
+        $this->assertEquals($value, $diff->compare($new, $old)['d']);
+        $this->assertFalse(isset($diff->compare($new, $old)['a']));
+        $this->assertFalse(isset($diff->compare($new, $old)['c']));
+    }
+
+    /** @test */
+    public function it_detects_loose_changes_with_strict_mode()
+    {
+        $diff = new ArrayDiffMultidimensional();
+
+        $new = [
+            'a' => 'b',
+            'c' => 1714,
+        ];
+
+        $old = [
+            'a' => 'b',
+            'c' => '1714',
+        ];
+
+        $this->assertEquals(1, count($diff->compare($new, $old)));
+        $this->assertTrue(isset($diff->compare($new, $old)['c']));
+        $this->assertEquals(1714, $diff->compare($new, $old)['c']);
+
+        $this->assertEquals(1, count($diff->compare($new, $old, true)));
+        $this->assertTrue(isset($diff->compare($new, $old, true)['c']));
+        $this->assertEquals(1714, $diff->compare($new, $old, true)['c']);
+
+        $this->assertEquals(1, count($diff->strictComparison($new, $old)));
+        $this->assertTrue(isset($diff->strictComparison($new, $old)['c']));
+        $this->assertEquals(1714, $diff->strictComparison($new, $old)['c']);
+    }
+
+    /** @test */
+    public function it_does_not_detect_loose_changes_without_strict_mode()
+    {
+        $diff = new ArrayDiffMultidimensional();
+
+        $new = [
+            'a' => 'b',
+            'c' => 1714,
+        ];
+
+        $old = [
+            'a' => 'b',
+            'c' => '1714',
+        ];
+
+        $this->assertEquals(0, count($diff->compare($new, $old, false)));
+        $this->assertFalse(isset($diff->compare($new, $old, false)['c']));
+
+        $this->assertEquals(0, count($diff->looseComparison($new, $old)));
+        $this->assertFalse(isset($diff->looseComparison($new, $old)['c']));
+    }
 }
