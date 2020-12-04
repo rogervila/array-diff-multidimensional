@@ -49,7 +49,7 @@ class ArrayDiffMultidimensional
             $value1 = $value;
             $value2 = $array2[$key];
 
-            if (is_float($value1) || is_float($value2)) {
+            if ($strict ? is_float($value1) && is_float($value2) : is_float($value1) || is_float($value2)) {
                 $value1 = (string) $value1;
                 $value2 = (string) $value2;
             }
