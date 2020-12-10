@@ -1,7 +1,7 @@
 # https://circleci.com/docs/2.0/testing-ios/#using-multiple-executor-types-macos--docker
 version: 2.1
 jobs:
-  build-and-test:
+  build:
     macos:
       xcode: 11.3.0
     environment:
