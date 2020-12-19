@@ -32,24 +32,5 @@ jobs:
 
       - name: Execute tests
         run: vendor/bin/phpunit
-
-      - name: Make sure Sonar Scanner is available
-        if: ${{ matrix.os == 'ubuntu-latest' && matrix.php == '8.0' }}
-        run: composer require rogervila/php-sonarqube-scanner --dev
-
-      - name: Configure sonar-project.properties
-        if: ${{ matrix.os == 'ubuntu-latest' && matrix.php == '8.0' }}
-        run: |
-          echo "# SonarQube Properties" > sonar-project.properties
-          echo "sonar.host.url=https://sonarcloud.io" >> sonar-project.properties
-          echo "sonar.login=${{ secrets.SONAR_TOKEN }}" >> sonar-project.properties
-          echo "sonar.projectKey=rogervila_array-diff-multidimensional" >> sonar-project.properties
-          echo "sonar.organization=rogervila-github" >> sonar-project.properties
-          echo "sonar.sources=." >> sonar-project.properties
-          echo "sonar.exclusions=vendor/**, tests/**" >> sonar-project.properties
-          echo "sonar.php.tests.reportPath=junit-logfile.xml" >> sonar-project.properties
-          echo "sonar.php.coverage.reportPaths=clover.xml" >> sonar-project.properties
-
-      - name: Run Sonar Scanner
-        if: ${{ matrix.os == 'ubuntu-latest' && matrix.php == '8.0' }}
-        run: vendor/bin/sonar-scanner
+        env:
+          XDEBUG_MODE: coverage
