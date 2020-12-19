@@ -17,7 +17,7 @@ class ArrayDiffMultidimensional
     public static function compare($array1, $array2, $strict = true)
     {
         if (!is_array($array1)) {
-            throw new \InvalidArgumentException('array1 must be an array!');
+            throw new \InvalidArgumentException('$array1 must be an array!');
         }
 
         if (!is_array($array2)) {
