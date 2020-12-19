@@ -21,7 +21,7 @@ jobs:
         uses: shivammathur/setup-php@2.9.0
         with:
           php-version: ${{ matrix.php }}
-          extensions: zip, xdebug
+          extensions: zip, curl, xdebug
           coverage: xdebug
 
       - name: Update composer
@@ -46,7 +46,7 @@ jobs:
           echo "sonar.projectKey=rogervila_array-diff-multidimensional" >> sonar-project.properties
           echo "sonar.organization=rogervila-github" >> sonar-project.properties
           echo "sonar.sources=." >> sonar-project.properties
-          echo "sonar.exclusions=tmp/**, vendor/**, tests/**" >> sonar-project.properties
+          echo "sonar.exclusions=vendor/**, tests/**" >> sonar-project.properties
           echo "sonar.php.tests.reportPath=junit-logfile.xml" >> sonar-project.properties
           echo "sonar.php.coverage.reportPaths=clover.xml" >> sonar-project.properties
 
