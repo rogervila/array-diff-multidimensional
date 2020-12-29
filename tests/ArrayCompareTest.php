@@ -317,15 +317,36 @@ class ArrayCompareTest extends TestCase
     {
         $diff = new ArrayDiffMultidimensional();
 
-        $new = [[]];
-        $old = [1];
+        $a = [[]];
+        $b = [1];
 
-        var_dump($diff->compare($new, $old));
-        // $this->assertEquals(1, count($diff->compare($new, $old)));
-        //($this->assertTrue(isset($diff->compare($new, $old)[0]));
-        //($this->assertTrue(is_int($diff->compare($new, $old)[0]));
-        //($this->assertEquals(123, $diff->compare($new, $old)[0]);
+        $this->assertEquals($a, $diff->compare($a, $b));
+        $this->assertTrue(isset($diff->compare($a, $b)[0]));
+    }
 
-        $this->assertTrue(true);
+    /** @test */
+    public function it_detects_empty_array_change_with_strict_mode_on_multiple_dimensions()
+    {
+        $diff = new ArrayDiffMultidimensional();
+
+        $new = [
+            'a' => 'b',
+            'c' => [
+                'd' => [],
+            ]
+        ];
+
+        $old = [
+            'a' => 'b',
+            'c' => [
+                'd' => 1,
+            ]
+        ];
+
+        $this->assertEquals([
+            'c' => [
+                'd' => [],
+            ]
+        ], $diff->compare($new, $old));
     }
 }
