@@ -1,0 +1,36 @@
+name: pull_request
+
+on: [pull_request]
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+        php: [8.0, 7.4, 7.3, 7.2, 7.1, 7.0, 5.6, 5.5]
+
+    name: PHP ${{ matrix.php }} - ${{ matrix.os }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@2.9.0
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: zip, curl, xdebug
+          coverage: xdebug
+
+      - name: Update composer
+        run: composer selfupdate
+
+      - name: Install dependencies
+        run: composer update --prefer-dist --no-interaction
+
+      - name: Execute tests
+        run: vendor/bin/phpunit
+        env:
+          XDEBUG_MODE: coverage

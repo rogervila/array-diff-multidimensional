@@ -275,4 +275,78 @@ class ArrayCompareTest extends TestCase
         $this->assertEquals(0, count($diff->looseComparison($new, $old)));
         $this->assertFalse(isset($diff->looseComparison($new, $old)['c']));
     }
+
+    /** @test */
+    public function it_detects_epsilon_change_with_strict_mode()
+    {
+        if (defined('PHP_FLOAT_EPSILON')) {
+            $diff = new ArrayDiffMultidimensional();
+
+            $new = [123];
+            $old = [PHP_FLOAT_EPSILON + 123];
+
+            $this->assertEquals(1, count($diff->compare($new, $old)));
+            $this->assertTrue(isset($diff->compare($new, $old)[0]));
+            $this->assertTrue(is_int($diff->compare($new, $old)[0]));
+            $this->assertEquals(123, $diff->compare($new, $old)[0]);
+        } else {
+            var_dump('Skipped since current PHP version does not have PHP_FLOAT_EPSILON defined');
+            $this->assertTrue(true);
+        }
+    }
+
+    /** @test */
+    public function it_does_not_detect_epsilon_change_with_strict_mode()
+    {
+        if (defined('PHP_FLOAT_EPSILON')) {
+            $diff = new ArrayDiffMultidimensional();
+
+            $new = [123];
+            $old = [PHP_FLOAT_EPSILON + 123];
+
+            $this->assertEquals(0, count($diff->looseComparison($new, $old)));
+            $this->assertFalse(isset($diff->looseComparison($new, $old)[0]));
+        } else {
+            var_dump('Skipped since current PHP version does not have PHP_FLOAT_EPSILON defined');
+            $this->assertTrue(true);
+        }
+    }
+
+    /** @test */
+    public function it_detects_empty_array_change_with_strict_mode()
+    {
+        $diff = new ArrayDiffMultidimensional();
+
+        $a = [[]];
+        $b = [1];
+
+        $this->assertEquals($a, $diff->compare($a, $b));
+        $this->assertTrue(isset($diff->compare($a, $b)[0]));
+    }
+
+    /** @test */
+    public function it_detects_empty_array_change_with_strict_mode_on_multiple_dimensions()
+    {
+        $diff = new ArrayDiffMultidimensional();
+
+        $new = [
+            'a' => 'b',
+            'c' => [
+                'd' => [],
+            ]
+        ];
+
+        $old = [
+            'a' => 'b',
+            'c' => [
+                'd' => 1,
+            ]
+        ];
+
+        $this->assertEquals([
+            'c' => [
+                'd' => [],
+            ]
+        ], $diff->compare($new, $old));
+    }
 }

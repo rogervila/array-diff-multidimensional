@@ -17,7 +17,7 @@ class ArrayDiffMultidimensional
     public static function compare($array1, $array2, $strict = true)
     {
         if (!is_array($array1)) {
-            throw new \InvalidArgumentException('array1 must be an array!');
+            throw new \InvalidArgumentException('$array1 must be an array!');
         }
 
         if (!is_array($array2)) {
@@ -26,17 +26,13 @@ class ArrayDiffMultidimensional
 
         $result = array();
 
-        if (!is_array($array2)) {
-            return $array1;
-        }
-
         foreach ($array1 as $key => $value) {
             if (!array_key_exists($key, $array2)) {
                 $result[$key] = $value;
                 continue;
             }
 
-            if (is_array($value)) {
+            if (is_array($value) && count($value) > 0) {
                 $recursiveArrayDiff = static::compare($value, $array2[$key], $strict);
 
                 if (count($recursiveArrayDiff) > 0) {
@@ -49,7 +45,7 @@ class ArrayDiffMultidimensional
             $value1 = $value;
             $value2 = $array2[$key];
 
-            if (is_float($value1) || is_float($value2)) {
+            if ($strict ? is_float($value1) && is_float($value2) : is_float($value1) || is_float($value2)) {
                 $value1 = (string) $value1;
                 $value2 = (string) $value2;
             }
