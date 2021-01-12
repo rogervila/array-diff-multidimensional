@@ -1,8 +1,6 @@
 # Array Diff Multidimensional
 
-[![Build Status](https://travis-ci.org/rogervila/array-diff-multidimensional.svg?branch=master)](https://travis-ci.org/rogervila/array-diff-multidimensional)
-[![Build status](https://ci.appveyor.com/api/projects/status/wues2pcnb6s07bbl?svg=true)](https://ci.appveyor.com/project/roger-vila/array-diff-multidimensional)
-[![Code Climate](https://codeclimate.com/github/rogervila/array-diff-multidimensional/badges/gpa.svg)](https://codeclimate.com/github/rogervila/array-diff-multidimensional)
+[![Build Status](https://github.com/rogervila/array-diff-multidimensional/workflows/build/badge.svg)](https://github.com/rogervila/array-diff-multidimensional/actions)
 [![StyleCI](https://styleci.io/repos/82589676/shield?branch=master)](https://styleci.io/repos/82589676)
 [![Total Downloads](https://img.shields.io/packagist/dt/rogervila/array-diff-multidimensional)](https://packagist.org/packages/rogervila/array-diff-multidimensional)
 [![Latest Stable Version](https://img.shields.io/packagist/v/rogervila/array-diff-multidimensional)](https://packagist.org/packages/rogervila/array-diff-multidimensional)
