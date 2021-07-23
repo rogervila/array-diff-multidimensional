@@ -51,9 +51,9 @@ The result of comparing `$new` with `$old` will return a new array with the chan
 ]
 ```
 
-## Strict vs Loose comparisons
+## Strict vs. Loose comparisons
 
-**Comparisons are strict by default**, but you can specify that you want to do a loose comparison passing a boolean as a third parameter for `compare` method, or calling the `looseComparison`
+**Comparisons are strict by default**, but you can specify that you want to make a loose comparison passing a boolean as the third parameter for `compare` method or calling the `looseComparison`
 
 ```php
 // This will deactivate the strict comparison mode
