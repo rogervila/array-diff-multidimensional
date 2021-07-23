@@ -62,7 +62,7 @@ The result of comparing `$new` with `$old` will return a new array with the chan
 **Comparisons are strict by default**, but you can specify that you want to make a loose comparison passing a boolean as the third parameter for `compare` method or calling the `looseComparison`
 
 ```php
-// Passing 'false' as a thid parameter will deactivate the strict comparison mode
+// Passing 'false' as a third parameter will deactivate the strict comparison mode
 ArrayDiffMultidimensional::compare($new, $old, false);
 
 array_diff_multidimensional($new, $old, false);
