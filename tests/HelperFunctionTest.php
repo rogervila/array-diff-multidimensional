@@ -13,6 +13,35 @@ class HelperFunctionTest extends TestCase
     }
 
     /** @test */
+    public function it_calls_compare_method()
+    {
+        $new = [
+            'a' => 'b',
+            'c' => [
+                'd' => 'e',
+                'f' => 'Hello',
+            ],
+        ];
+
+        $old = [
+            'a' => 'b',
+            'c' => [
+                'd' => 'e',
+                'f' => 'Goodbye',
+            ],
+        ];
+
+        $this->assertEquals(
+            [
+                'c' => [
+                    'f' => 'Hello'
+                ],
+            ],
+            array_diff_multidimensional($new, $old)
+        );
+    }
+
+    /** @test */
     public function loose_comparisons()
     {
         $new = [
