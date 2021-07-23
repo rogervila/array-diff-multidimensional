@@ -6,8 +6,6 @@
 [![Latest Stable Version](https://img.shields.io/packagist/v/rogervila/array-diff-multidimensional)](https://packagist.org/packages/rogervila/array-diff-multidimensional)
 [![License](https://img.shields.io/packagist/l/rogervila/array-diff-multidimensional)](https://packagist.org/packages/rogervila/array-diff-multidimensional)
 
-[![SensioLabsInsight](https://insight.sensiolabs.com/projects/0d8faa82-5cd3-44dd-9759-a8a1b7b55fce/big.png)](https://insight.sensiolabs.com/projects/0d8faa82-5cd3-44dd-9759-a8a1b7b55fce)
-
 Works like the [PHP array_diff()](http://php.net/manual/es/function.array-diff.php) function, but with multidimensional arrays.
 
 ## Install
@@ -53,9 +51,9 @@ The result of comparing `$new` with `$old` will return a new array with the chan
 ]
 ```
 
-## Strict vs Loose comparisons
+## Strict vs. Loose comparisons
 
-**Comparisons are strict by default**, but you can specify that you want to do a loose comparison passing a boolean as a third parameter for `compare` method, or calling the `looseComparison`
+**Comparisons are strict by default**, but you can specify that you want to make a loose comparison passing a boolean as the third parameter for `compare` method or calling the `looseComparison`
 
 ```php
 // This will deactivate the strict comparison mode
