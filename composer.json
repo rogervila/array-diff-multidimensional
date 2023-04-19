@@ -1,14 +1,17 @@
 {
   "name": "rogervila/array-diff-multidimensional",
   "description": "Compare the difference between two multidimensional arrays",
-  "type": "library",
   "license": "MIT",
+  "type": "library",
   "authors": [
     {
       "name": "Roger Vilà",
       "email": "rogervila@me.com"
     }
   ],
+  "require-dev": {
+    "phpunit/phpunit": "^4.8 || ^5.0 || ^6.0 || ^7.0 || ^8.0 || ^9.0 || ^10.0"
+  },
   "autoload": {
     "psr-4": {
       "Rogervila\\": "src/"
@@ -16,13 +19,5 @@
     "files": [
       "src/helpers.php"
     ]
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Rogervila\\Tests\\": "tests/"
-    }
-  },
-  "require-dev": {
-    "phpunit/phpunit": "^4.8 || ^5.0 || ^6.0 || ^7.0 || ^8.0 || ^9.0"
   }
 }
