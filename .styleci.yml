@@ -1,8 +1,4 @@
-preset: psr2
-
-finder:
-  exclude:
-    - "tests"
+preset: psr12
 
 enabled:
   - no_unneeded_control_parentheses
