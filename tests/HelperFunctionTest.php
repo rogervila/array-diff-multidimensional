@@ -1,7 +1,5 @@
 <?php
 
-namespace Rogervila\Test;
-
 use PHPUnit\Framework\TestCase;
 
 class HelperFunctionTest extends TestCase
