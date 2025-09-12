@@ -9,7 +9,7 @@ class ArrayDiffMultidimensional
      * $strict variable defines if comparison must be strict or not
      *
      * @param array $array1
-     * @param array $array2
+     * @param mixed $array2
      * @param bool $strict
      *
      * @return array
@@ -24,19 +24,17 @@ class ArrayDiffMultidimensional
             return $array1;
         }
 
-        $result = [];
+        $result = array();
 
         foreach ($array1 as $key => $value) {
-            if (!isset($array2[$key]) && !array_key_exists($key, $array2)) {
+            if (!array_key_exists($key, $array2)) {
                 $result[$key] = $value;
                 continue;
             }
 
             $value2 = $array2[$key];
 
-            // Handle arrays - check if current value is array first
             if (is_array($value)) {
-                // Handle empty arrays efficiently
                 if (empty($value)) {
                     if (!is_array($value2) || !empty($value2)) {
                         $result[$key] = $value;
