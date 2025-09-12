@@ -104,8 +104,12 @@ class ArrayDiffEdgeCasesTest extends TestCase
     {
         $diff = new ArrayDiffMultidimensional();
 
-        $callable1 = function() { return 'test1'; };
-        $callable2 = function() { return 'test2'; };
+        $callable1 = function () {
+            return 'test1';
+        };
+        $callable2 = function () {
+            return 'test2';
+        };
 
         $new = ['callable' => $callable1];
         $old = ['callable' => $callable2];
