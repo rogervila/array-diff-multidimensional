@@ -24,10 +24,11 @@ class ArrayDiffMultidimensional
             return $array1;
         }
 
-        $result = array();
+        $result = [];
 
         foreach ($array1 as $key => $value) {
-            if (!array_key_exists($key, $array2)) {
+            // Use isset for better performance, fall back to array_key_exists for null values
+            if (!isset($array2[$key]) && !array_key_exists($key, $array2)) {
                 $result[$key] = $value;
                 continue;
             }
@@ -54,19 +55,17 @@ class ArrayDiffMultidimensional
                 continue;
             }
 
-            // Handle float comparison optimization
+            // Handle scalar value comparison optimization
             if ($strict) {
-                // Strict comparison - only convert if both are floats
+                // Strict comparison - optimize float handling
                 if (is_float($value) && is_float($value2)) {
-                    // Use epsilon comparison for floats
+                    // Use epsilon comparison for float precision
                     $epsilon = defined('PHP_FLOAT_EPSILON') ? PHP_FLOAT_EPSILON : 2.2204460492503E-16;
                     if (abs($value - $value2) > $epsilon) {
                         $result[$key] = $value;
                     }
-                } else {
-                    if ($value !== $value2) {
-                        $result[$key] = $value;
-                    }
+                } elseif ($value !== $value2) {
+                    $result[$key] = $value;
                 }
             } else {
                 // Loose comparison - convert if either is float
@@ -74,10 +73,8 @@ class ArrayDiffMultidimensional
                     if ((string) $value != (string) $value2) {
                         $result[$key] = $value;
                     }
-                } else {
-                    if ($value != $value2) {
-                        $result[$key] = $value;
-                    }
+                } elseif ($value != $value2) {
+                    $result[$key] = $value;
                 }
             }
         }
