@@ -347,4 +347,306 @@ class ArrayCompareTest extends TestCase
             ]
         ], $diff->compare($new, $old));
     }
+
+    /** @test */
+    public function it_handles_null_values_correctly()
+    {
+        $diff = new ArrayDiffMultidimensional();
+
+        $new = ['a' => null, 'b' => 'test'];
+        $old = ['a' => '', 'b' => 'test'];
+
+        $result = $diff->compare($new, $old);
+        $this->assertEquals(['a' => null], $result);
+    }
+
+    /** @test */
+    public function it_handles_null_vs_missing_key()
+    {
+        $diff = new ArrayDiffMultidimensional();
+
+        $new = ['a' => null, 'b' => 'test'];
+        $old = ['b' => 'test'];
+
+        $result = $diff->compare($new, $old);
+        $this->assertEquals(['a' => null], $result);
+    }
+
+    /** @test */
+    public function it_handles_false_vs_empty_array()
+    {
+        $diff = new ArrayDiffMultidimensional();
+
+        $new = ['a' => false, 'b' => []];
+        $old = ['a' => [], 'b' => false];
+
+        $result = $diff->compare($new, $old);
+        $this->assertEquals(['a' => false, 'b' => []], $result);
+    }
+
+    /** @test */
+    public function it_handles_zero_values_correctly()
+    {
+        $diff = new ArrayDiffMultidimensional();
+
+        $new = ['a' => 0, 'b' => '0', 'c' => 0.0];
+        $old = ['a' => false, 'b' => 0, 'c' => '0'];
+
+        $result = $diff->compare($new, $old, true);
+        $this->assertEquals(['a' => 0, 'b' => '0', 'c' => 0.0], $result);
+
+        $result = $diff->compare($new, $old, false);
+        $this->assertEquals([], $result);
+    }
+
+    /** @test */
+    public function it_handles_boolean_values()
+    {
+        $diff = new ArrayDiffMultidimensional();
+
+        $new = ['a' => true, 'b' => false];
+        $old = ['a' => 1, 'b' => 0];
+
+        $result = $diff->compare($new, $old, true);
+        $this->assertEquals(['a' => true, 'b' => false], $result);
+
+        $result = $diff->compare($new, $old, false);
+        $this->assertEquals([], $result);
+    }
+
+    /** @test */
+    public function it_handles_mixed_numeric_types()
+    {
+        $diff = new ArrayDiffMultidimensional();
+
+        $new = ['a' => 123, 'b' => 123.0, 'c' => '123'];
+        $old = ['a' => '123', 'b' => 123, 'c' => 123.0];
+
+        $result = $diff->compare($new, $old, true);
+        $this->assertEquals(['a' => 123, 'b' => 123.0, 'c' => '123'], $result);
+
+        $result = $diff->compare($new, $old, false);
+        $this->assertEquals([], $result);
+    }
+
+    /** @test */
+    public function it_handles_very_small_float_differences()
+    {
+        $diff = new ArrayDiffMultidimensional();
+
+        $new = ['a' => 1.0000000000001];
+        $old = ['a' => 1.0000000000002];
+
+        $result = $diff->compare($new, $old, true);
+        $this->assertEquals(['a' => 1.0000000000001], $result);
+    }
+
+    /** @test */
+    public function it_handles_array_with_numeric_keys()
+    {
+        $diff = new ArrayDiffMultidimensional();
+
+        $new = [0 => 'a', 1 => 'b', 2 => ['c' => 'd']];
+        $old = [0 => 'a', 1 => 'x', 2 => ['c' => 'e']];
+
+        $result = $diff->compare($new, $old);
+        $this->assertEquals([1 => 'b', 2 => ['c' => 'd']], $result);
+    }
+
+    /** @test */
+    public function it_handles_empty_vs_null_in_arrays()
+    {
+        $diff = new ArrayDiffMultidimensional();
+
+        $new = ['a' => ['b' => []]];
+        $old = ['a' => ['b' => null]];
+
+        $result = $diff->compare($new, $old);
+        $this->assertEquals(['a' => ['b' => []]], $result);
+    }
+
+    /** @test */
+    public function it_handles_nested_empty_arrays()
+    {
+        $diff = new ArrayDiffMultidimensional();
+
+        $new = ['a' => ['b' => ['c' => []]]];
+        $old = ['a' => ['b' => ['c' => ['d' => 'value']]]];
+
+        $result = $diff->compare($new, $old);
+        $this->assertEquals(['a' => ['b' => ['c' => []]]], $result);
+    }
+
+    /** @test */
+    public function it_handles_objects_correctly()
+    {
+        $diff = new ArrayDiffMultidimensional();
+
+        $obj1 = new \stdClass();
+        $obj1->prop = 'value1';
+
+        $obj2 = new \stdClass();
+        $obj2->prop = 'value2';
+
+        $new = ['a' => $obj1];
+        $old = ['a' => $obj2];
+
+        $result = $diff->compare($new, $old);
+        $this->assertEquals(['a' => $obj1], $result);
+    }
+
+    /** @test */
+    public function it_handles_large_nested_structures()
+    {
+        $diff = new ArrayDiffMultidimensional();
+
+        $new = [
+            'level1' => [
+                'level2' => [
+                    'level3' => [
+                        'level4' => [
+                            'level5' => [
+                                'data' => 'new_value',
+                                'other' => 'same'
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ];
+
+        $old = [
+            'level1' => [
+                'level2' => [
+                    'level3' => [
+                        'level4' => [
+                            'level5' => [
+                                'data' => 'old_value',
+                                'other' => 'same'
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ];
+
+        $result = $diff->compare($new, $old);
+        $expected = [
+            'level1' => [
+                'level2' => [
+                    'level3' => [
+                        'level4' => [
+                            'level5' => [
+                                'data' => 'new_value'
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ];
+
+        $this->assertEquals($expected, $result);
+    }
+
+    /** @test */
+    public function it_handles_array_to_scalar_changes()
+    {
+        $diff = new ArrayDiffMultidimensional();
+
+        $new = ['a' => 'scalar_value'];
+        $old = ['a' => ['nested' => 'array']];
+
+        $result = $diff->compare($new, $old);
+        $this->assertEquals(['a' => 'scalar_value'], $result);
+    }
+
+    /** @test */
+    public function it_handles_complex_mixed_types()
+    {
+        $diff = new ArrayDiffMultidimensional();
+
+        $new = [
+            'string' => 'test',
+            'int' => 42,
+            'float' => 3.14,
+            'bool' => true,
+            'null' => null,
+            'array' => ['nested' => 'value'],
+            'empty_array' => []
+        ];
+
+        $old = [
+            'string' => 'different',
+            'int' => 42,
+            'float' => 3.14,
+            'bool' => false,
+            'null' => null,
+            'array' => ['nested' => 'different'],
+            'empty_array' => ['not_empty']
+        ];
+
+        $result = $diff->compare($new, $old);
+        $expected = [
+            'string' => 'test',
+            'bool' => true,
+            'array' => ['nested' => 'value'],
+            'empty_array' => []
+        ];
+
+        $this->assertEquals($expected, $result);
+    }
+
+    /** @test */
+    public function it_preserves_array_structure_in_results()
+    {
+        $diff = new ArrayDiffMultidimensional();
+
+        $new = [
+            'users' => [
+                0 => ['name' => 'John', 'age' => 30],
+                1 => ['name' => 'Jane', 'age' => 25]
+            ]
+        ];
+
+        $old = [
+            'users' => [
+                0 => ['name' => 'John', 'age' => 25],
+                1 => ['name' => 'Jane', 'age' => 25]
+            ]
+        ];
+
+        $result = $diff->compare($new, $old);
+        $expected = [
+            'users' => [
+                0 => ['age' => 30]
+            ]
+        ];
+
+        $this->assertEquals($expected, $result);
+    }
+
+    /** @test */
+    public function it_handles_performance_with_large_arrays()
+    {
+        $diff = new ArrayDiffMultidimensional();
+
+        // Create large arrays for performance testing
+        $new = [];
+        $old = [];
+
+        for ($i = 0; $i < 1000; $i++) {
+            $new[$i] = ['data' => "value_$i", 'meta' => ['id' => $i]];
+            $old[$i] = ['data' => "value_$i", 'meta' => ['id' => $i]];
+        }
+
+        // Change one value
+        $new[500]['data'] = 'changed_value';
+
+        $start = microtime(true);
+        $result = $diff->compare($new, $old);
+        $end = microtime(true);
+
+        $this->assertEquals([500 => ['data' => 'changed_value']], $result);
+        $this->assertLessThan(1.0, $end - $start, 'Performance test: should complete in less than 1 second');
+    }
 }
