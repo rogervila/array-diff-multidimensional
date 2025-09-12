@@ -214,7 +214,7 @@ class ArrayDiffEdgeCasesTest extends TestCase
 
         // Test infinity vs large numbers
         $new = ['inf_vs_large' => INF];
-        $old = ['inf_vs_large' => PHP_FLOAT_MAX];
+        $old = ['inf_vs_large' => defined('PHP_FLOAT_MAX') ? PHP_FLOAT_MAX : 1.7976931348623E+308];
         $result = $diff->compare($new, $old, true);
         $this->assertEquals(['inf_vs_large' => INF], $result);
 

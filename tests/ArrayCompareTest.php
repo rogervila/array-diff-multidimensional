@@ -277,37 +277,30 @@ class ArrayCompareTest extends TestCase
     /** @test */
     public function it_detects_epsilon_change_with_strict_mode()
     {
-        if (defined('PHP_FLOAT_EPSILON')) {
-            $diff = new ArrayDiffMultidimensional();
+        $epsilon = defined('PHP_FLOAT_EPSILON') ? PHP_FLOAT_EPSILON : 2.2204460492503E-16;
 
-            $new = [123];
-            $old = [PHP_FLOAT_EPSILON + 123];
+        $diff = new ArrayDiffMultidimensional();
 
-            $this->assertEquals(1, count($diff->compare($new, $old)));
-            $this->assertTrue(isset($diff->compare($new, $old)[0]));
-            $this->assertTrue(is_int($diff->compare($new, $old)[0]));
-            $this->assertEquals(123, $diff->compare($new, $old)[0]);
-        } else {
-            var_dump('Skipped since current PHP version does not have PHP_FLOAT_EPSILON defined');
-            $this->assertTrue(true);
-        }
+        $new = [123];
+        $old = [$epsilon + 123];
+
+        $this->assertEquals(1, count($diff->compare($new, $old)));
+        $this->assertTrue(isset($diff->compare($new, $old)[0]));
+        $this->assertTrue(is_int($diff->compare($new, $old)[0]));
+        $this->assertEquals(123, $diff->compare($new, $old)[0]);
     }
 
     /** @test */
     public function it_does_not_detect_epsilon_change_with_strict_mode()
     {
-        if (defined('PHP_FLOAT_EPSILON')) {
-            $diff = new ArrayDiffMultidimensional();
+        $epsilon = defined('PHP_FLOAT_EPSILON') ? PHP_FLOAT_EPSILON : 2.2204460492503E-16;
+        $diff = new ArrayDiffMultidimensional();
 
-            $new = [123];
-            $old = [PHP_FLOAT_EPSILON + 123];
+        $new = [123];
+        $old = [$epsilon + 123];
 
-            $this->assertEquals(0, count($diff->looseComparison($new, $old)));
-            $this->assertFalse(isset($diff->looseComparison($new, $old)[0]));
-        } else {
-            var_dump('Skipped since current PHP version does not have PHP_FLOAT_EPSILON defined');
-            $this->assertTrue(true);
-        }
+        $this->assertEquals(0, count($diff->looseComparison($new, $old)));
+        $this->assertFalse(isset($diff->looseComparison($new, $old)[0]));
     }
 
     /** @test */
