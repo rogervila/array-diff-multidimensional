@@ -24,34 +24,61 @@ class ArrayDiffMultidimensional
             return $array1;
         }
 
-        $result = array();
+        $result = [];
 
         foreach ($array1 as $key => $value) {
-            if (!array_key_exists($key, $array2)) {
+            if (!isset($array2[$key]) && !array_key_exists($key, $array2)) {
                 $result[$key] = $value;
                 continue;
             }
 
-            if (is_array($value) && count($value) > 0) {
-                $recursiveArrayDiff = static::compare($value, $array2[$key], $strict);
-
-                if (count($recursiveArrayDiff) > 0) {
-                    $result[$key] = $recursiveArrayDiff;
-                }
-
-                continue;
-            }
-
-            $value1 = $value;
             $value2 = $array2[$key];
 
-            if ($strict ? is_float($value1) && is_float($value2) : is_float($value1) || is_float($value2)) {
-                $value1 = (string) $value1;
-                $value2 = (string) $value2;
+            // Handle arrays - check if current value is array first
+            if (is_array($value)) {
+                // Handle empty arrays efficiently
+                if (empty($value)) {
+                    if (!is_array($value2) || !empty($value2)) {
+                        $result[$key] = $value;
+                    }
+                    continue;
+                }
+
+                // Only recurse if both are arrays
+                if (is_array($value2)) {
+                    $recursiveArrayDiff = static::compare($value, $value2, $strict);
+                    if (!empty($recursiveArrayDiff)) {
+                        $result[$key] = $recursiveArrayDiff;
+                    }
+                } else {
+                    $result[$key] = $value;
+                }
+                continue;
             }
 
-            if ($strict ? $value1 !== $value2 : $value1 != $value2) {
-                $result[$key] = $value;
+            // Handle float comparison optimization
+            if ($strict) {
+                // Strict comparison - only convert if both are floats
+                if (is_float($value) && is_float($value2)) {
+                    if ((string) $value !== (string) $value2) {
+                        $result[$key] = $value;
+                    }
+                } else {
+                    if ($value !== $value2) {
+                        $result[$key] = $value;
+                    }
+                }
+            } else {
+                // Loose comparison - convert if either is float
+                if (is_float($value) || is_float($value2)) {
+                    if ((string) $value != (string) $value2) {
+                        $result[$key] = $value;
+                    }
+                } else {
+                    if ($value != $value2) {
+                        $result[$key] = $value;
+                    }
+                }
             }
         }
 
