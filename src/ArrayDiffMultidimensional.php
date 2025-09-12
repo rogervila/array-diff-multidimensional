@@ -58,7 +58,9 @@ class ArrayDiffMultidimensional
             if ($strict) {
                 // Strict comparison - only convert if both are floats
                 if (is_float($value) && is_float($value2)) {
-                    if ((string) $value !== (string) $value2) {
+                    // Use epsilon comparison for floats
+                    $epsilon = defined('PHP_FLOAT_EPSILON') ? PHP_FLOAT_EPSILON : 2.2204460492503E-16;
+                    if (abs($value - $value2) > $epsilon) {
                         $result[$key] = $value;
                     }
                 } else {
