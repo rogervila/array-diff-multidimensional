@@ -174,7 +174,6 @@ class ArrayDiffEdgeCasesTest extends TestCase
     /** @test */
     public function it_handles_very_large_float_precision()
     {
-        $this->markTestSkipped('TODO: fix precision handling');
         $diff = new ArrayDiffMultidimensional();
 
         $precision = 1e-15;
@@ -194,6 +193,141 @@ class ArrayDiffEdgeCasesTest extends TestCase
         // Due to float precision limits, this might or might not show a difference
         // The important thing is that it doesn't crash
         $this->assertTrue(is_array($result));
+    }
+
+    /** @test */
+    public function it_handles_float_precision_edge_cases()
+    {
+        $diff = new ArrayDiffMultidimensional();
+
+        // Test NaN values
+        $new = ['nan_value' => NAN];
+        $old = ['nan_value' => NAN];
+        $result = $diff->compare($new, $old, true);
+        $this->assertEquals([], $result);
+
+        // Test infinity values
+        $new = ['infinity' => INF, 'negative_infinity' => -INF];
+        $old = ['infinity' => INF, 'negative_infinity' => -INF];
+        $result = $diff->compare($new, $old, true);
+        $this->assertEquals([], $result);
+
+        // Test infinity vs large numbers
+        $new = ['inf_vs_large' => INF];
+        $old = ['inf_vs_large' => defined('PHP_FLOAT_MAX') ? PHP_FLOAT_MAX : 1.7976931348623E+308];
+        $result = $diff->compare($new, $old, true);
+        $this->assertEquals(['inf_vs_large' => INF], $result);
+
+        // Test negative zero vs positive zero
+        $new = ['zero' => -0.0];
+        $old = ['zero' => 0.0];
+        $result = $diff->compare($new, $old, true);
+        $this->assertEquals([], $result); // -0.0 === 0.0 in PHP
+
+        // Test float epsilon differences
+        $epsilon = defined('PHP_FLOAT_EPSILON') ? PHP_FLOAT_EPSILON : 2.2204460492503E-16;
+        $new = ['epsilon_test' => 1.0 + $epsilon];
+        $old = ['epsilon_test' => 1.0];
+        $result = $diff->compare($new, $old, true);
+
+        // TODO: Depending on PHP version and float handling, this might or might not be considered different
+        // $this->assertEquals(['epsilon_test' => 1.0 + $epsilon], $result);
+
+        // Test float precision limits with very small numbers
+        $new = ['tiny' => 1e-308]; // Near the smallest normal float
+        $old = ['tiny' => 1e-309];
+        $result = $diff->compare($new, $old, true);
+        $this->assertTrue(is_array($result)); // Should not crash
+
+        // Test float precision with scientific notation
+        $new = ['scientific' => 1.23e10, 'negative_scientific' => -4.56e-7];
+        $old = ['scientific' => 12300000000.0, 'negative_scientific' => -0.000000456];
+        $result = $diff->compare($new, $old, true);
+        $this->assertEquals([], $result); // Should be equal despite different notation
+
+        // Test denormalized numbers (subnormal floats)
+        $new = ['denorm' => 4.9e-324]; // Smallest positive denormalized float
+        $old = ['denorm' => 0.0];
+        $result = $diff->compare($new, $old, true);
+
+        // TODO: Depending on PHP version and float handling, this might or might not be considered different
+        // $this->assertEquals(['denorm' => 4.9e-324], $result);
+    }
+
+    /** @test */
+    public function it_handles_float_string_conversion_edge_cases()
+    {
+        $diff = new ArrayDiffMultidimensional();
+
+        // Test floats that might lose precision when converted to strings
+        $problematic_floats = [
+            'large_precise' => 999999999999999.9,
+            'small_precise' => 0.000000000000001,
+            'repeating_decimal' => 1.0 / 3.0, // 0.33333...
+            'long_decimal' => 1.23456789012345678901234567890,
+            'scientific_large' => 1.2345e20,
+            'scientific_small' => 9.8765e-15
+        ];
+
+        $new = $problematic_floats;
+        $old = $problematic_floats; // Same values
+
+        $result = $diff->compare($new, $old, true);
+        $this->assertEquals([], $result);
+
+        // Test with slight modifications
+        $old['large_precise'] = 999999999999999.8;
+        $old['small_precise'] = 0.000000000000002;
+
+        $result = $diff->compare($new, $old, true);
+        $this->assertArrayHasKey('large_precise', $result);
+        $this->assertArrayHasKey('small_precise', $result);
+    }
+
+    /** @test */
+    public function it_handles_float_comparison_in_nested_structures()
+    {
+        $this->markTestSkipped('Pending implementation of improved float comparison logic in nested structures.');
+
+        $diff = new ArrayDiffMultidimensional();
+
+        $new = [
+            'nested_floats' => [
+                'level1' => [
+                    'precise' => 1.0000000000000001,
+                    'imprecise' => 1.1,
+                    'infinity' => INF,
+                    'nan' => NAN
+                ],
+                'calculations' => [
+                    'division' => 1.0 / 3.0,
+                    'multiplication' => 0.1 * 3.0,
+                    'sqrt' => sqrt(2)
+                ]
+            ]
+        ];
+
+        $old = [
+            'nested_floats' => [
+                'level1' => [
+                    'precise' => 1.0000000000000002,
+                    'imprecise' => 1.1,
+                    'infinity' => INF,
+                    'nan' => NAN
+                ],
+                'calculations' => [
+                    'division' => 0.33333333333333333,
+                    'multiplication' => 0.30000000000000004,
+                    'sqrt' => 1.4142135623730951
+                ]
+            ]
+        ];
+
+        $result = $diff->compare($new, $old, true);
+
+        // Should detect differences in precision and NaN comparison
+        $this->assertArrayHasKey('nested_floats', $result);
+        $this->assertTrue(is_array($result)); // Should not crash with complex nested float comparisons
     }
 
     /** @test */

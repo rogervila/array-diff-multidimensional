@@ -9,7 +9,7 @@ class ArrayDiffMultidimensional
      * $strict variable defines if comparison must be strict or not
      *
      * @param array $array1
-     * @param array $array2
+     * @param mixed $array2
      * @param bool $strict
      *
      * @return array
@@ -24,34 +24,58 @@ class ArrayDiffMultidimensional
             return $array1;
         }
 
-        $result = array();
+        $result = [];
 
         foreach ($array1 as $key => $value) {
-            if (!array_key_exists($key, $array2)) {
+            // Use isset for better performance, fall back to array_key_exists for null values
+            if (!isset($array2[$key]) && !array_key_exists($key, $array2)) {
                 $result[$key] = $value;
                 continue;
             }
 
-            if (is_array($value) && count($value) > 0) {
-                $recursiveArrayDiff = static::compare($value, $array2[$key], $strict);
-
-                if (count($recursiveArrayDiff) > 0) {
-                    $result[$key] = $recursiveArrayDiff;
-                }
-
-                continue;
-            }
-
-            $value1 = $value;
             $value2 = $array2[$key];
 
-            if ($strict ? is_float($value1) && is_float($value2) : is_float($value1) || is_float($value2)) {
-                $value1 = (string) $value1;
-                $value2 = (string) $value2;
+            if (is_array($value)) {
+                if (empty($value)) {
+                    if (!is_array($value2) || !empty($value2)) {
+                        $result[$key] = $value;
+                    }
+                    continue;
+                }
+
+                // Only recurse if both are arrays
+                if (is_array($value2)) {
+                    $recursiveArrayDiff = static::compare($value, $value2, $strict);
+                    if (!empty($recursiveArrayDiff)) {
+                        $result[$key] = $recursiveArrayDiff;
+                    }
+                } else {
+                    $result[$key] = $value;
+                }
+                continue;
             }
 
-            if ($strict ? $value1 !== $value2 : $value1 != $value2) {
-                $result[$key] = $value;
+            // Handle scalar value comparison optimization
+            if ($strict) {
+                // Strict comparison - optimize float handling
+                if (is_float($value) && is_float($value2)) {
+                    // Use epsilon comparison for float precision
+                    $epsilon = defined('PHP_FLOAT_EPSILON') ? PHP_FLOAT_EPSILON : 2.2204460492503E-16;
+                    if (abs($value - $value2) > $epsilon) {
+                        $result[$key] = $value;
+                    }
+                } elseif ($value !== $value2) {
+                    $result[$key] = $value;
+                }
+            } else {
+                // Loose comparison - convert if either is float
+                if (is_float($value) || is_float($value2)) {
+                    if ((string) $value != (string) $value2) {
+                        $result[$key] = $value;
+                    }
+                } elseif ($value != $value2) {
+                    $result[$key] = $value;
+                }
             }
         }
 
