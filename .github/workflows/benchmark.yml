@@ -34,6 +34,7 @@ jobs:
       # Step 4: Run benchmarks on PR branch
       - name: Run benchmarks on PR branch
         run: |
+          mkdir -p tests/Benchmark
           ./vendor/bin/phpbench run tests/Benchmark \
             --report=default \
             --tag=pr \
@@ -57,6 +58,7 @@ jobs:
       # Step 7: Run benchmarks on base branch
       - name: Run benchmarks on base branch
         run: |
+          mkdir -p tests/Benchmark
           ./vendor/bin/phpbench run tests/Benchmark \
             --report=default \
             --tag=base \
@@ -73,6 +75,7 @@ jobs:
       - name: Compare benchmarks with baseline
         id: compare
         run: |
+          mkdir -p tests/Benchmark
           ./vendor/bin/phpbench run tests/Benchmark \
             --report=aggregate \
             --ref=base \
