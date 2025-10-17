@@ -38,8 +38,7 @@ jobs:
             --report=default \
             --tag=pr \
             --retry-threshold=5 \
-            --iterations=10 \
-            --output=json > pr-results.json
+            --iterations=10
 
       # Step 5: Checkout base branch
       - name: Checkout base branch
