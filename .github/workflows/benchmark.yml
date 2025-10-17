@@ -44,8 +44,10 @@ jobs:
       # Step 5: Checkout base branch
       - name: Checkout base branch
         run: |
-          git fetch origin ${{ github.base_ref }}
-          git checkout origin/${{ github.base_ref }}
+          git fetch origin "$BASE_REF"
+          git checkout "origin/$BASE_REF"
+        env:
+          BASE_REF: ${{ github.base_ref }}
 
       # Step 6: Install dependencies for base branch
       - name: Install Composer dependencies (base)
@@ -64,7 +66,9 @@ jobs:
 
       # Step 8: Checkout PR branch again
       - name: Checkout PR branch again
-        run: git checkout ${{ github.head_ref }}
+        run: git checkout "$HEAD_REF"
+        env:
+          HEAD_REF: ${{ github.head_ref }}
 
       # Step 9: Compare benchmarks
       - name: Compare benchmarks with baseline
