@@ -1,0 +1,106 @@
+name: benchmark
+
+on:
+  pull_request:
+    branches:
+      - master
+    types: [opened, synchronize, reopened]
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the PR branch
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all history for comparison
+
+      # Step 2: Setup PHP
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: zip, curl, mbstring, xml
+          coverage: none
+
+      # Step 3: Install dependencies for PR branch
+      - name: Install Composer dependencies
+        run: |
+          composer install --prefer-dist --no-progress --no-suggest
+          composer require --dev phpbench/phpbench
+
+      # Step 4: Run benchmarks on PR branch
+      - name: Run benchmarks on PR branch
+        run: |
+          ./vendor/bin/phpbench run \
+            --report=default \
+            --tag=pr \
+            --retry-threshold=5 \
+            --iterations=10 \
+            --output=json > pr-results.json
+
+      # Step 5: Checkout base branch
+      - name: Checkout base branch
+        run: |
+          git fetch origin ${{ github.base_ref }}
+          git checkout origin/${{ github.base_ref }}
+
+      # Step 6: Install dependencies for base branch
+      - name: Install Composer dependencies (base)
+        run: |
+          composer install --prefer-dist --no-progress --no-suggest
+          composer require --dev phpbench/phpbench
+
+      # Step 7: Run benchmarks on base branch
+      - name: Run benchmarks on base branch
+        run: |
+          ./vendor/bin/phpbench run \
+            --report=default \
+            --tag=base \
+            --retry-threshold=5 \
+            --iterations=10
+
+      # Step 8: Checkout PR branch again
+      - name: Checkout PR branch again
+        run: git checkout ${{ github.head_ref }}
+
+      # Step 9: Compare benchmarks
+      - name: Compare benchmarks with baseline
+        id: compare
+        run: |
+          ./vendor/bin/phpbench run \
+            --report=aggregate \
+            --ref=base \
+            --retry-threshold=5 \
+            --iterations=10 \
+            --tag=pr \
+            --assert="mode(variant.time.avg) <= mode(baseline.time.avg) +/- 10%" \
+          | tee benchmark-comparison.txt
+        continue-on-error: true
+
+      # Step 10: Post results as PR comment
+      - name: Comment PR with benchmark results
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const results = fs.readFileSync('benchmark-comparison.txt', 'utf8');
+
+            const body = `## 📊 Benchmark Results\n\n\`\`\`\n${results}\n\`\`\`\n\n**Note:** Benchmarks compare PR against \`${{ github.base_ref }}\` branch.\nPerformance regression threshold: ±10%`;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body
+            });
+
+      # Step 11: Fail if performance degrades
+      - name: Check benchmark assertions
+        if: steps.compare.outcome == 'failure'
+        run: |
+          echo "::error::Performance regression detected! Benchmarks exceeded acceptable threshold."
+          exit 1
