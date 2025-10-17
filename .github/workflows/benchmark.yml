@@ -19,7 +19,7 @@ jobs:
 
       # Step 2: Setup PHP
       - name: Setup PHP
-        uses: shivammathur/setup-php@v2
+        uses: shivammathur/setup-php@bf6b4fbd49ca58e4608c9c89fba0b8d90bd2a39f
         with:
           php-version: '8.4'
           extensions: zip, curl, mbstring, xml
@@ -34,7 +34,7 @@ jobs:
       # Step 4: Run benchmarks on PR branch
       - name: Run benchmarks on PR branch
         run: |
-          ./vendor/bin/phpbench run \
+          ./vendor/bin/phpbench run tests/Benchmark \
             --report=default \
             --tag=pr \
             --retry-threshold=5 \
@@ -58,7 +58,7 @@ jobs:
       # Step 7: Run benchmarks on base branch
       - name: Run benchmarks on base branch
         run: |
-          ./vendor/bin/phpbench run \
+          ./vendor/bin/phpbench run tests/Benchmark \
             --report=default \
             --tag=base \
             --retry-threshold=5 \
@@ -74,7 +74,7 @@ jobs:
       - name: Compare benchmarks with baseline
         id: compare
         run: |
-          ./vendor/bin/phpbench run \
+          ./vendor/bin/phpbench run tests/Benchmark \
             --report=aggregate \
             --ref=base \
             --retry-threshold=5 \
