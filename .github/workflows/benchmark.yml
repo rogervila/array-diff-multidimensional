@@ -82,7 +82,7 @@ jobs:
             --retry-threshold=5 \
             --iterations=10 \
             --tag=pr \
-            --assert="mode(variant.time.avg) <= mode(baseline.time.avg) +/- 10%" \
+            --assert="mode(variant.time.avg) <= mode(baseline.time.avg) +/- 2%" \
           | tee benchmark-comparison.txt
         continue-on-error: true
 
@@ -95,7 +95,7 @@ jobs:
             const fs = require('fs');
             const results = fs.readFileSync('benchmark-comparison.txt', 'utf8');
 
-            const body = `## 📊 Benchmark Results\n\n\`\`\`\n${results}\n\`\`\`\n\n**Note:** Benchmarks compare PR against \`${{ github.base_ref }}\` branch.\nPerformance regression threshold: ±10%`;
+            const body = `## 📊 Benchmark Results\n\n\`\`\`\n${results}\n\`\`\`\n\n**Note:** Benchmarks compare PR against \`${{ github.base_ref }}\` branch.\nPerformance regression threshold: ±2%`;
 
             github.rest.issues.createComment({
               issue_number: context.issue.number,
