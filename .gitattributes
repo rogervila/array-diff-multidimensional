@@ -7,3 +7,4 @@
 /.styleci.yml export-ignore
 /.codeclimate.yml export-ignore
 /phpunit.xml export-ignore
+/phpbench.json export-ignore
