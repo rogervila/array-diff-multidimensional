@@ -88,7 +88,7 @@ jobs:
 
       # Step 10: Post results as PR comment
       - name: Comment PR with benchmark results
-        uses: actions/github-script@v6
+        uses: actions/github-script@v8
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
