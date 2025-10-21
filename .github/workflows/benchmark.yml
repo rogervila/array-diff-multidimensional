@@ -6,8 +6,13 @@ on:
       - master
     types: [opened, synchronize, reopened]
 
+permissions:
+  pull-requests: write
+  issues: write
+
 jobs:
   benchmark:
+  
     runs-on: ubuntu-latest
 
     steps:
@@ -88,7 +93,8 @@ jobs:
 
       # Step 10: Post results as PR comment
       - name: Comment PR with benchmark results
-        uses: actions/github-script@v6
+        if: ${{ github.actor != 'dependabot[bot]' }}
+        uses: actions/github-script@v8
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
