@@ -94,7 +94,7 @@ jobs:
       # Step 10: Post results as PR comment
       - name: Comment PR with benchmark results
         if: ${{ github.actor != 'dependabot[bot]' }}
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
