@@ -29,7 +29,15 @@ jobs:
           php-version: '8.5'
           extensions: zip, curl, mbstring, xml
           coverage: none
-          tools: composer:v2, phpbench
+          tools: composer:v2
+
+      # Step 2.1: Install PHPBench globally
+      - name: Install PHPBench
+        run: |
+          composer global require phpbench/phpbench:^1.6 --prefer-dist --no-progress --no-interaction
+          PHPBENCH_BIN="$(composer global config bin-dir --absolute)/phpbench"
+          echo "PHPBENCH_BIN=$PHPBENCH_BIN" >> "$GITHUB_ENV"
+          "$PHPBENCH_BIN" --version
 
       # Step 3: Install dependencies for PR branch
       - name: Install Composer dependencies
@@ -40,7 +48,7 @@ jobs:
       - name: Run benchmarks on PR branch
         run: |
           mkdir -p tests/Benchmark
-          phpbench run tests/Benchmark \
+          "$PHPBENCH_BIN" run tests/Benchmark \
             --report=default \
             --tag=pr \
             --retry-threshold=5 \
@@ -63,7 +71,7 @@ jobs:
       - name: Run benchmarks on base branch
         run: |
           mkdir -p tests/Benchmark
-          phpbench run tests/Benchmark \
+          "$PHPBENCH_BIN" run tests/Benchmark \
             --report=default \
             --tag=base \
             --retry-threshold=5 \
@@ -80,7 +88,7 @@ jobs:
         id: compare
         run: |
           mkdir -p tests/Benchmark
-          phpbench run tests/Benchmark \
+          "$PHPBENCH_BIN" run tests/Benchmark \
             --report=aggregate \
             --ref=base \
             --retry-threshold=5 \
