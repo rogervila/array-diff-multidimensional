@@ -5,8 +5,8 @@ use Rogervila\ArrayDiffMultidimensional;
 
 class ArrayDiffEdgeCasesTest extends TestCase
 {
-    /** @test */
-    public function it_handles_array_key_exists_vs_isset_edge_cases()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_handles_array_key_exists_vs_isset_edge_cases()
     {
         $diff = new ArrayDiffMultidimensional();
 
@@ -25,8 +25,8 @@ class ArrayDiffEdgeCasesTest extends TestCase
         $this->assertEquals(['existing' => null], $result);
     }
 
-    /** @test */
-    public function it_handles_false_vs_zero_edge_cases()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_handles_false_vs_zero_edge_cases()
     {
         $diff = new ArrayDiffMultidimensional();
 
@@ -42,8 +42,8 @@ class ArrayDiffEdgeCasesTest extends TestCase
         $this->assertEquals([], $result);
     }
 
-    /** @test */
-    public function it_handles_empty_string_vs_null_edge_cases()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_handles_empty_string_vs_null_edge_cases()
     {
         $diff = new ArrayDiffMultidimensional();
 
@@ -57,8 +57,8 @@ class ArrayDiffEdgeCasesTest extends TestCase
         $this->assertEquals([], $result);
     }
 
-    /** @test */
-    public function it_handles_numeric_string_edge_cases()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_handles_numeric_string_edge_cases()
     {
         $diff = new ArrayDiffMultidimensional();
 
@@ -74,8 +74,8 @@ class ArrayDiffEdgeCasesTest extends TestCase
         $this->assertEquals([], $result);
     }
 
-    /** @test */
-    public function it_handles_resource_values()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_handles_resource_values()
     {
         $diff = new ArrayDiffMultidimensional();
 
@@ -99,8 +99,8 @@ class ArrayDiffEdgeCasesTest extends TestCase
         fclose($resource2);
     }
 
-    /** @test */
-    public function it_handles_callable_values()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_handles_callable_values()
     {
         $diff = new ArrayDiffMultidimensional();
 
@@ -125,8 +125,8 @@ class ArrayDiffEdgeCasesTest extends TestCase
         $this->assertEquals([], $result);
     }
 
-    /** @test */
-    public function it_handles_array_vs_object_edge_cases()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_handles_array_vs_object_edge_cases()
     {
         $diff = new ArrayDiffMultidimensional();
 
@@ -141,8 +141,8 @@ class ArrayDiffEdgeCasesTest extends TestCase
         $this->assertEquals(['item' => $array], $result);
     }
 
-    /** @test */
-    public function it_handles_nested_array_vs_scalar_transitions()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_handles_nested_array_vs_scalar_transitions()
     {
         $diff = new ArrayDiffMultidimensional();
 
@@ -171,8 +171,8 @@ class ArrayDiffEdgeCasesTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    /** @test */
-    public function it_handles_very_large_float_precision()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_handles_very_large_float_precision()
     {
         $diff = new ArrayDiffMultidimensional();
 
@@ -195,8 +195,8 @@ class ArrayDiffEdgeCasesTest extends TestCase
         $this->assertTrue(is_array($result));
     }
 
-    /** @test */
-    public function it_handles_float_precision_edge_cases()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_handles_float_precision_edge_cases()
     {
         $diff = new ArrayDiffMultidimensional();
 
@@ -254,8 +254,8 @@ class ArrayDiffEdgeCasesTest extends TestCase
         // $this->assertEquals(['denorm' => 4.9e-324], $result);
     }
 
-    /** @test */
-    public function it_handles_float_string_conversion_edge_cases()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_handles_float_string_conversion_edge_cases()
     {
         $diff = new ArrayDiffMultidimensional();
 
@@ -284,8 +284,8 @@ class ArrayDiffEdgeCasesTest extends TestCase
         $this->assertArrayHasKey('small_precise', $result);
     }
 
-    /** @test */
-    public function it_handles_float_comparison_in_nested_structures()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_handles_float_comparison_in_nested_structures()
     {
         $this->markTestSkipped('Pending implementation of improved float comparison logic in nested structures.');
 
@@ -330,8 +330,8 @@ class ArrayDiffEdgeCasesTest extends TestCase
         $this->assertTrue(is_array($result)); // Should not crash with complex nested float comparisons
     }
 
-    /** @test */
-    public function it_handles_empty_arrays_at_different_nesting_levels()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_handles_empty_arrays_at_different_nesting_levels()
     {
         $diff = new ArrayDiffMultidimensional();
 
@@ -363,8 +363,8 @@ class ArrayDiffEdgeCasesTest extends TestCase
         $this->assertEquals($new, $result);
     }
 
-    /** @test */
-    public function it_handles_circular_reference_prevention()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_handles_circular_reference_prevention()
     {
         $diff = new ArrayDiffMultidimensional();
 
@@ -386,8 +386,8 @@ class ArrayDiffEdgeCasesTest extends TestCase
         $this->assertEquals(['circular' => $obj1], $result);
     }
 
-    /** @test */
-    public function it_handles_array_keys_with_special_characters()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_handles_array_keys_with_special_characters()
     {
         $diff = new ArrayDiffMultidimensional();
 

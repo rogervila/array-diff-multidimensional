@@ -5,8 +5,8 @@ use Rogervila\ArrayDiffMultidimensional;
 
 class ArrayDiffIntegrationTest extends TestCase
 {
-    /** @test */
-    public function it_handles_real_world_configuration_arrays()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_handles_real_world_configuration_arrays()
     {
         $diff = new ArrayDiffMultidimensional();
 
@@ -81,8 +81,8 @@ class ArrayDiffIntegrationTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    /** @test */
-    public function it_handles_user_profile_updates()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_handles_user_profile_updates()
     {
         $diff = new ArrayDiffMultidimensional();
 
@@ -167,8 +167,8 @@ class ArrayDiffIntegrationTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    /** @test */
-    public function it_handles_api_response_comparison()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_handles_api_response_comparison()
     {
         $diff = new ArrayDiffMultidimensional();
 
@@ -224,8 +224,8 @@ class ArrayDiffIntegrationTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    /** @test */
-    public function it_handles_shopping_cart_updates()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_handles_shopping_cart_updates()
     {
         $diff = new ArrayDiffMultidimensional();
 
@@ -310,8 +310,8 @@ class ArrayDiffIntegrationTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    /** @test */
-    public function it_handles_form_data_validation_errors()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_handles_form_data_validation_errors()
     {
         $diff = new ArrayDiffMultidimensional();
 
@@ -352,8 +352,8 @@ class ArrayDiffIntegrationTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    /** @test */
-    public function it_maintains_performance_with_complex_real_world_data()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_maintains_performance_with_complex_real_world_data()
     {
         $diff = new ArrayDiffMultidimensional();
 

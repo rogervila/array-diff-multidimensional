@@ -5,15 +5,15 @@ use Rogervila\ArrayDiffMultidimensional;
 
 class ArrayCompareTest extends TestCase
 {
-    /** @test */
-    public function it_returns_an_array()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_returns_an_array()
     {
         $diff = new ArrayDiffMultidimensional();
         $this->assertTrue(is_array($diff->compare([], [])));
     }
 
-    /** @test */
-    public function it_fails_if_first_argument_is_not_an_array()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_fails_if_first_argument_is_not_an_array()
     {
         if (method_exists($this, 'expectException')) {
             $this->expectException(\InvalidArgumentException::class);
@@ -26,8 +26,8 @@ class ArrayCompareTest extends TestCase
         }
     }
 
-    /** @test */
-    public function it_does_not_change_if_second_argument_is_not_an_array()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_does_not_change_if_second_argument_is_not_an_array()
     {
         $diff = new ArrayDiffMultidimensional();
 
@@ -46,8 +46,8 @@ class ArrayCompareTest extends TestCase
         $this->assertEquals($old, $diff->compare($old, $new));
     }
 
-    /** @test */
-    public function it_detects_the_difference_on_string_value()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_detects_the_difference_on_string_value()
     {
         $diff = new ArrayDiffMultidimensional();
 
@@ -67,8 +67,8 @@ class ArrayCompareTest extends TestCase
         $this->assertFalse(isset($diff->compare($new, $old)['a']));
     }
 
-    /** @test */
-    public function it_detects_change_from_string_to_array()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_detects_change_from_string_to_array()
     {
         $diff = new ArrayDiffMultidimensional();
 
@@ -90,8 +90,8 @@ class ArrayCompareTest extends TestCase
         $this->assertFalse(isset($diff->compare($new, $old)['a']));
     }
 
-    /** @test */
-    public function it_detects_changes_on_nested_arrays()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_detects_changes_on_nested_arrays()
     {
         $diff = new ArrayDiffMultidimensional();
 
@@ -116,8 +116,8 @@ class ArrayCompareTest extends TestCase
         $this->assertFalse(isset($diff->compare($new, $old)['a']));
     }
 
-    /** @test */
-    public function it_detects_change_from_float_to_array()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_detects_change_from_float_to_array()
     {
         $diff = new ArrayDiffMultidimensional();
         $newfloat = defined('PHP_FLOAT_MAX') ? PHP_FLOAT_MAX : 1.0000000000002;
@@ -139,8 +139,8 @@ class ArrayCompareTest extends TestCase
         $this->assertFalse(isset($diff->compare($new, $old)['a']));
     }
 
-    /** @test */
-    public function it_detects_floats_do_not_change()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_detects_floats_do_not_change()
     {
         $diff = new ArrayDiffMultidimensional();
         $floatval = defined('PHP_FLOAT_MAX') ? PHP_FLOAT_MAX : 1.0000000000005;
@@ -160,8 +160,8 @@ class ArrayCompareTest extends TestCase
         $this->assertFalse(isset($diff->compare($new, $old)['c']));
     }
 
-    /** @test */
-    public function it_works_with_deep_levels()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_works_with_deep_levels()
     {
         $diff = new ArrayDiffMultidimensional();
 
@@ -200,8 +200,8 @@ class ArrayCompareTest extends TestCase
         $this->assertFalse(isset($diff->compare($new, $old)['a']));
     }
 
-    /** @test */
-    public function it_detects_new_array_items()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_detects_new_array_items()
     {
         $diff = new ArrayDiffMultidimensional();
         $value = 'this should be detected';
@@ -224,8 +224,8 @@ class ArrayCompareTest extends TestCase
         $this->assertFalse(isset($diff->compare($new, $old)['c']));
     }
 
-    /** @test */
-    public function it_detects_loose_changes_with_strict_mode()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_detects_loose_changes_with_strict_mode()
     {
         $diff = new ArrayDiffMultidimensional();
 
@@ -252,8 +252,8 @@ class ArrayCompareTest extends TestCase
         $this->assertEquals(1714, $diff->strictComparison($new, $old)['c']);
     }
 
-    /** @test */
-    public function it_does_not_detect_loose_changes_without_strict_mode()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_does_not_detect_loose_changes_without_strict_mode()
     {
         $diff = new ArrayDiffMultidimensional();
 
@@ -274,8 +274,8 @@ class ArrayCompareTest extends TestCase
         $this->assertFalse(isset($diff->looseComparison($new, $old)['c']));
     }
 
-    /** @test */
-    public function it_detects_epsilon_change_with_strict_mode()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_detects_epsilon_change_with_strict_mode()
     {
         $epsilon = defined('PHP_FLOAT_EPSILON') ? PHP_FLOAT_EPSILON : 2.2204460492503E-16;
 
@@ -290,8 +290,8 @@ class ArrayCompareTest extends TestCase
         $this->assertEquals(123, $diff->compare($new, $old)[0]);
     }
 
-    /** @test */
-    public function it_does_not_detect_epsilon_change_with_strict_mode()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_does_not_detect_epsilon_change_with_strict_mode()
     {
         $epsilon = defined('PHP_FLOAT_EPSILON') ? PHP_FLOAT_EPSILON : 2.2204460492503E-16;
         $diff = new ArrayDiffMultidimensional();
@@ -303,8 +303,8 @@ class ArrayCompareTest extends TestCase
         $this->assertFalse(isset($diff->looseComparison($new, $old)[0]));
     }
 
-    /** @test */
-    public function it_detects_empty_array_change_with_strict_mode()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_detects_empty_array_change_with_strict_mode()
     {
         $diff = new ArrayDiffMultidimensional();
 
@@ -315,8 +315,8 @@ class ArrayCompareTest extends TestCase
         $this->assertTrue(isset($diff->compare($a, $b)[0]));
     }
 
-    /** @test */
-    public function it_detects_empty_array_change_with_strict_mode_on_multiple_dimensions()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_detects_empty_array_change_with_strict_mode_on_multiple_dimensions()
     {
         $diff = new ArrayDiffMultidimensional();
 
@@ -341,8 +341,8 @@ class ArrayCompareTest extends TestCase
         ], $diff->compare($new, $old));
     }
 
-    /** @test */
-    public function it_handles_null_values_correctly()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_handles_null_values_correctly()
     {
         $diff = new ArrayDiffMultidimensional();
 
@@ -353,8 +353,8 @@ class ArrayCompareTest extends TestCase
         $this->assertEquals(['a' => null], $result);
     }
 
-    /** @test */
-    public function it_handles_null_vs_missing_key()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_handles_null_vs_missing_key()
     {
         $diff = new ArrayDiffMultidimensional();
 
@@ -365,8 +365,8 @@ class ArrayCompareTest extends TestCase
         $this->assertEquals(['a' => null], $result);
     }
 
-    /** @test */
-    public function it_handles_false_vs_empty_array()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_handles_false_vs_empty_array()
     {
         $diff = new ArrayDiffMultidimensional();
 
@@ -377,8 +377,8 @@ class ArrayCompareTest extends TestCase
         $this->assertEquals(['a' => false, 'b' => []], $result);
     }
 
-    /** @test */
-    public function it_handles_zero_values_correctly()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_handles_zero_values_correctly()
     {
         $diff = new ArrayDiffMultidimensional();
 
@@ -392,8 +392,8 @@ class ArrayCompareTest extends TestCase
         $this->assertEquals([], $result);
     }
 
-    /** @test */
-    public function it_handles_boolean_values()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_handles_boolean_values()
     {
         $diff = new ArrayDiffMultidimensional();
 
@@ -407,8 +407,8 @@ class ArrayCompareTest extends TestCase
         $this->assertEquals([], $result);
     }
 
-    /** @test */
-    public function it_handles_mixed_numeric_types()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_handles_mixed_numeric_types()
     {
         $diff = new ArrayDiffMultidimensional();
 
@@ -422,8 +422,8 @@ class ArrayCompareTest extends TestCase
         $this->assertEquals([], $result);
     }
 
-    /** @test */
-    public function it_handles_very_small_float_differences()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_handles_very_small_float_differences()
     {
         $diff = new ArrayDiffMultidimensional();
 
@@ -434,8 +434,8 @@ class ArrayCompareTest extends TestCase
         $this->assertEquals(['a' => 1.0000000000001], $result);
     }
 
-    /** @test */
-    public function it_handles_array_with_numeric_keys()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_handles_array_with_numeric_keys()
     {
         $diff = new ArrayDiffMultidimensional();
 
@@ -446,8 +446,8 @@ class ArrayCompareTest extends TestCase
         $this->assertEquals([1 => 'b', 2 => ['c' => 'd']], $result);
     }
 
-    /** @test */
-    public function it_handles_empty_vs_null_in_arrays()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_handles_empty_vs_null_in_arrays()
     {
         $diff = new ArrayDiffMultidimensional();
 
@@ -458,8 +458,8 @@ class ArrayCompareTest extends TestCase
         $this->assertEquals(['a' => ['b' => []]], $result);
     }
 
-    /** @test */
-    public function it_handles_nested_empty_arrays()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_handles_nested_empty_arrays()
     {
         $diff = new ArrayDiffMultidimensional();
 
@@ -470,8 +470,8 @@ class ArrayCompareTest extends TestCase
         $this->assertEquals(['a' => ['b' => ['c' => []]]], $result);
     }
 
-    /** @test */
-    public function it_handles_objects_correctly()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_handles_objects_correctly()
     {
         $diff = new ArrayDiffMultidimensional();
 
@@ -488,8 +488,8 @@ class ArrayCompareTest extends TestCase
         $this->assertEquals(['a' => $obj1], $result);
     }
 
-    /** @test */
-    public function it_handles_large_nested_structures()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_handles_large_nested_structures()
     {
         $diff = new ArrayDiffMultidimensional();
 
@@ -541,8 +541,8 @@ class ArrayCompareTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    /** @test */
-    public function it_handles_array_to_scalar_changes()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_handles_array_to_scalar_changes()
     {
         $diff = new ArrayDiffMultidimensional();
 
@@ -553,8 +553,8 @@ class ArrayCompareTest extends TestCase
         $this->assertEquals(['a' => 'scalar_value'], $result);
     }
 
-    /** @test */
-    public function it_handles_complex_mixed_types()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_handles_complex_mixed_types()
     {
         $diff = new ArrayDiffMultidimensional();
 
@@ -589,8 +589,8 @@ class ArrayCompareTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    /** @test */
-    public function it_preserves_array_structure_in_results()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_preserves_array_structure_in_results()
     {
         $diff = new ArrayDiffMultidimensional();
 
@@ -618,8 +618,8 @@ class ArrayCompareTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    /** @test */
-    public function it_handles_performance_with_large_arrays()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_handles_performance_with_large_arrays()
     {
         $diff = new ArrayDiffMultidimensional();
 
