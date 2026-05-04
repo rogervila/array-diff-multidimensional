@@ -42,6 +42,8 @@ jobs:
       # Step 3: Install dependencies for PR branch
       - name: Install Composer dependencies
         run: |
+          # Remove dependency artifacts that can leak across branch switches in CI
+          git clean -fd -- composer.lock vendor
           composer install --prefer-dist --no-progress
 
       # Step 4: Run benchmarks on PR branch
@@ -65,6 +67,8 @@ jobs:
       # Step 6: Install dependencies for base branch
       - name: Install Composer dependencies (base)
         run: |
+          # Ensure install uses only files from the checked out base branch
+          git clean -fd -- composer.lock vendor
           composer install --prefer-dist --no-progress
 
       # Step 7: Run benchmarks on base branch
@@ -82,6 +86,13 @@ jobs:
         run: git checkout "$HEAD_REF"
         env:
           HEAD_REF: ${{ github.head_ref }}
+
+      # Step 8.1: Reinstall dependencies for PR branch
+      - name: Install Composer dependencies (PR, comparison)
+        run: |
+          # Prevent base branch dependency artifacts from affecting PR comparison run
+          git clean -fd -- composer.lock vendor
+          composer install --prefer-dist --no-progress
 
       # Step 9: Compare benchmarks
       - name: Compare benchmarks with baseline
