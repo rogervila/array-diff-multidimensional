@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   benchmark:
-  
+
     runs-on: ubuntu-latest
 
     steps:
@@ -26,7 +26,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@bf6b4fbd49ca58e4608c9c89fba0b8d90bd2a39f
         with:
-          php-version: '8.4'
+          php-version: '8.5'
           extensions: zip, curl, mbstring, xml
           coverage: none
 
