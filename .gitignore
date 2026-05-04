@@ -3,3 +3,10 @@ composer.lock
 *.cache
 clover.xml
 junit-logfile.xml
+tmp/
+
+# Agents
+.agents/
+.claude/
+.windsurf/
+skills-lock.json

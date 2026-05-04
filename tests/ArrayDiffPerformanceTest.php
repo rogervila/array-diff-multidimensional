@@ -5,8 +5,8 @@ use Rogervila\ArrayDiffMultidimensional;
 
 class ArrayDiffPerformanceTest extends TestCase
 {
-    /** @test */
-    public function it_handles_deeply_nested_identical_arrays_efficiently()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_handles_deeply_nested_identical_arrays_efficiently()
     {
         $diff = new ArrayDiffMultidimensional();
 
@@ -20,8 +20,8 @@ class ArrayDiffPerformanceTest extends TestCase
         $this->assertLessThan(0.1, $end - $start, 'Should handle identical nested arrays quickly');
     }
 
-    /** @test */
-    public function it_handles_wide_arrays_efficiently()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_handles_wide_arrays_efficiently()
     {
         $diff = new ArrayDiffMultidimensional();
 
@@ -45,8 +45,8 @@ class ArrayDiffPerformanceTest extends TestCase
         $this->assertLessThan(0.5, $end - $start, 'Should handle wide arrays efficiently');
     }
 
-    /** @test */
-    public function it_handles_mixed_depth_arrays_efficiently()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_handles_mixed_depth_arrays_efficiently()
     {
         $diff = new ArrayDiffMultidimensional();
 
@@ -70,8 +70,8 @@ class ArrayDiffPerformanceTest extends TestCase
         $this->assertLessThan(0.2, $end - $start, 'Should handle mixed depth arrays efficiently');
     }
 
-    /** @test */
-    public function it_handles_arrays_with_many_empty_subarrays()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_handles_arrays_with_many_empty_subarrays()
     {
         $diff = new ArrayDiffMultidimensional();
 
@@ -94,8 +94,8 @@ class ArrayDiffPerformanceTest extends TestCase
         $this->assertLessThan(0.1, $end - $start, 'Should handle many empty arrays efficiently');
     }
 
-    /** @test */
-    public function it_handles_arrays_with_many_null_values()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_handles_arrays_with_many_null_values()
     {
         $diff = new ArrayDiffMultidimensional();
 

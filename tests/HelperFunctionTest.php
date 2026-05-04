@@ -4,14 +4,14 @@ use PHPUnit\Framework\TestCase;
 
 class HelperFunctionTest extends TestCase
 {
-    /** @test */
-    public function it_returns_an_array()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_returns_an_array()
     {
         $this->assertTrue(is_array(array_diff_multidimensional([], [])));
     }
 
-    /** @test */
-    public function it_calls_compare_method()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_it_calls_compare_method()
     {
         $new = [
             'a' => 'b',
@@ -39,8 +39,8 @@ class HelperFunctionTest extends TestCase
         );
     }
 
-    /** @test */
-    public function loose_comparisons()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_loose_comparisons()
     {
         $new = [
             'a' => 'b',
@@ -56,8 +56,8 @@ class HelperFunctionTest extends TestCase
         $this->assertFalse(isset(array_diff_multidimensional($new, $old, false)['c']));
     }
 
-    /** @test */
-    public function strict_comparisons()
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function test_strict_comparisons()
     {
         $new = [
             'a' => 'b',

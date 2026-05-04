@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   benchmark:
-  
+
     runs-on: ubuntu-latest
 
     steps:
@@ -26,21 +26,31 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@bf6b4fbd49ca58e4608c9c89fba0b8d90bd2a39f
         with:
-          php-version: '8.4'
+          php-version: '8.5'
           extensions: zip, curl, mbstring, xml
           coverage: none
+          tools: composer:v2
+
+      # Step 2.1: Install PHPBench globally
+      - name: Install PHPBench
+        run: |
+          composer global require phpbench/phpbench:^1.6 --prefer-dist --no-progress --no-interaction
+          PHPBENCH_BIN="$(composer global config bin-dir --absolute)/phpbench"
+          echo "PHPBENCH_BIN=$PHPBENCH_BIN" >> "$GITHUB_ENV"
+          "$PHPBENCH_BIN" --version
 
       # Step 3: Install dependencies for PR branch
       - name: Install Composer dependencies
         run: |
-          composer install --prefer-dist --no-progress --no-suggest
-          composer require --dev phpbench/phpbench
+          # Remove dependency artifacts that can leak across branch switches in CI
+          git clean -ffdx -- composer.lock vendor
+          composer install --prefer-dist --no-progress
 
       # Step 4: Run benchmarks on PR branch
       - name: Run benchmarks on PR branch
         run: |
           mkdir -p tests/Benchmark
-          ./vendor/bin/phpbench run tests/Benchmark \
+          "$PHPBENCH_BIN" run tests/Benchmark \
             --report=default \
             --tag=pr \
             --retry-threshold=5 \
@@ -54,17 +64,41 @@ jobs:
         env:
           BASE_REF: ${{ github.base_ref }}
 
+      # Step 5.1: Diagnose Composer state on base branch
+      - name: Diagnose Composer state (base)
+        run: |
+          echo "Commit: $(git rev-parse --short HEAD)"
+          echo "Base ref: origin/$BASE_REF"
+          echo "phpunit/phpunit constraint in composer.json:"
+          grep -n '"phpunit/phpunit"' composer.json || true
+
+          if [ -f composer.lock ]; then
+            echo "composer.lock present before cleanup"
+            php -r '$lock = json_decode(file_get_contents("composer.lock"), true); $version = "not-found"; foreach (($lock["packages-dev"] ?? []) as $pkg) { if (($pkg["name"] ?? "") === "phpunit/phpunit") { $version = $pkg["version"] ?? "unknown"; break; } } echo "locked phpunit/phpunit: {$version}\n";'
+          else
+            echo "composer.lock missing before cleanup"
+          fi
+
+          echo "ignore status for composer.lock:"
+          git check-ignore -v composer.lock || true
+
+          echo "git status snapshot:"
+          git status --short -- composer.json composer.lock vendor || true
+        env:
+          BASE_REF: ${{ github.base_ref }}
+
       # Step 6: Install dependencies for base branch
       - name: Install Composer dependencies (base)
         run: |
-          composer install --prefer-dist --no-progress --no-suggest
-          composer require --dev phpbench/phpbench
+          # Ensure install uses only files from the checked out base branch
+          git clean -ffdx -- composer.lock vendor
+          composer install --prefer-dist --no-progress
 
       # Step 7: Run benchmarks on base branch
       - name: Run benchmarks on base branch
         run: |
           mkdir -p tests/Benchmark
-          ./vendor/bin/phpbench run tests/Benchmark \
+          "$PHPBENCH_BIN" run tests/Benchmark \
             --report=default \
             --tag=base \
             --retry-threshold=5 \
@@ -76,12 +110,19 @@ jobs:
         env:
           HEAD_REF: ${{ github.head_ref }}
 
+      # Step 8.1: Reinstall dependencies for PR branch
+      - name: Install Composer dependencies (PR, comparison)
+        run: |
+          # Prevent base branch dependency artifacts from affecting PR comparison run
+          git clean -ffdx -- composer.lock vendor
+          composer install --prefer-dist --no-progress
+
       # Step 9: Compare benchmarks
       - name: Compare benchmarks with baseline
         id: compare
         run: |
           mkdir -p tests/Benchmark
-          ./vendor/bin/phpbench run tests/Benchmark \
+          "$PHPBENCH_BIN" run tests/Benchmark \
             --report=aggregate \
             --ref=base \
             --retry-threshold=5 \
