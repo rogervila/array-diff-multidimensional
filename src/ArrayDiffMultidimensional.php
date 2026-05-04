@@ -24,6 +24,18 @@ class ArrayDiffMultidimensional
             return $array1;
         }
 
+        if ($array1 === []) {
+            return [];
+        }
+
+        if ($array2 === []) {
+            return $array1;
+        }
+
+        if ($array1 === $array2) {
+            return [];
+        }
+        $epsilon = null;
         $result = [];
 
         foreach ($array1 as $key => $value) {
@@ -36,8 +48,8 @@ class ArrayDiffMultidimensional
             $value2 = $array2[$key];
 
             if (is_array($value)) {
-                if (empty($value)) {
-                    if (!is_array($value2) || !empty($value2)) {
+                if ($value === []) {
+                    if (!is_array($value2) || $value2 !== []) {
                         $result[$key] = $value;
                     }
                     continue;
@@ -45,8 +57,11 @@ class ArrayDiffMultidimensional
 
                 // Only recurse if both are arrays
                 if (is_array($value2)) {
-                    $recursiveArrayDiff = static::compare($value, $value2, $strict);
-                    if (!empty($recursiveArrayDiff)) {
+                    $recursiveArrayDiff = $strict
+                        ? self::compareStrictArray($value, $value2, $epsilon)
+                        : self::compareLooseArray($value, $value2);
+
+                    if ($recursiveArrayDiff !== []) {
                         $result[$key] = $recursiveArrayDiff;
                     }
                 } else {
@@ -55,31 +70,187 @@ class ArrayDiffMultidimensional
                 continue;
             }
 
-            // Handle scalar value comparison optimization
             if ($strict) {
-                // Strict comparison - optimize float handling
+                if ($value === $value2) {
+                    continue;
+                }
+
                 if (is_float($value) && is_float($value2)) {
-                    // Use epsilon comparison for float precision
-                    $epsilon = defined('PHP_FLOAT_EPSILON') ? PHP_FLOAT_EPSILON : 2.2204460492503E-16;
+                    if ($epsilon === null) {
+                        $epsilon = self::resolveFloatEpsilon();
+                    }
+
                     if (abs($value - $value2) > $epsilon) {
                         $result[$key] = $value;
                     }
-                } elseif ($value !== $value2) {
-                    $result[$key] = $value;
+                    continue;
                 }
-            } else {
-                // Loose comparison - convert if either is float
-                if (is_float($value) || is_float($value2)) {
-                    if ((string) $value != (string) $value2) {
-                        $result[$key] = $value;
-                    }
-                } elseif ($value != $value2) {
-                    $result[$key] = $value;
-                }
+
+                $result[$key] = $value;
+                continue;
             }
+
+            if ($value == $value2) {
+                continue;
+            }
+
+            // Preserve float-string tolerance from previous loose comparison logic
+            if ((is_float($value) || is_float($value2)) && (string) $value == (string) $value2) {
+                continue;
+            }
+
+            $result[$key] = $value;
         }
 
         return $result;
+    }
+
+    /**
+     * @param array $array1
+     * @param array $array2
+     * @param float|null $epsilon
+     *
+     * @return array
+     */
+    private static function compareStrictArray($array1, $array2, $epsilon = null)
+    {
+        if ($array1 === []) {
+            return [];
+        }
+
+        if ($array2 === []) {
+            return $array1;
+        }
+
+        if ($array1 === $array2) {
+            return [];
+        }
+
+        $result = [];
+
+        foreach ($array1 as $key => $value) {
+            if (!isset($array2[$key]) && !array_key_exists($key, $array2)) {
+                $result[$key] = $value;
+                continue;
+            }
+
+            $value2 = $array2[$key];
+
+            if (is_array($value)) {
+                if ($value === []) {
+                    if (!is_array($value2) || $value2 !== []) {
+                        $result[$key] = $value;
+                    }
+                    continue;
+                }
+
+                if (is_array($value2)) {
+                    $recursiveArrayDiff = self::compareStrictArray($value, $value2, $epsilon);
+                    if ($recursiveArrayDiff !== []) {
+                        $result[$key] = $recursiveArrayDiff;
+                    }
+                } else {
+                    $result[$key] = $value;
+                }
+                continue;
+            }
+
+            if ($value === $value2) {
+                continue;
+            }
+
+            if (is_float($value) && is_float($value2)) {
+                if ($epsilon === null) {
+                    $epsilon = self::resolveFloatEpsilon();
+                }
+
+                if (abs($value - $value2) > $epsilon) {
+                    $result[$key] = $value;
+                }
+                continue;
+            }
+
+            $result[$key] = $value;
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param array $array1
+     * @param array $array2
+     *
+     * @return array
+     */
+    private static function compareLooseArray($array1, $array2)
+    {
+        if ($array1 === []) {
+            return [];
+        }
+
+        if ($array2 === []) {
+            return $array1;
+        }
+
+        if ($array1 === $array2) {
+            return [];
+        }
+
+        $result = [];
+
+        foreach ($array1 as $key => $value) {
+            if (!isset($array2[$key]) && !array_key_exists($key, $array2)) {
+                $result[$key] = $value;
+                continue;
+            }
+
+            $value2 = $array2[$key];
+
+            if (is_array($value)) {
+                if ($value === []) {
+                    if (!is_array($value2) || $value2 !== []) {
+                        $result[$key] = $value;
+                    }
+                    continue;
+                }
+
+                if (is_array($value2)) {
+                    $recursiveArrayDiff = self::compareLooseArray($value, $value2);
+                    if ($recursiveArrayDiff !== []) {
+                        $result[$key] = $recursiveArrayDiff;
+                    }
+                } else {
+                    $result[$key] = $value;
+                }
+                continue;
+            }
+
+            if ($value == $value2) {
+                continue;
+            }
+
+            if ((is_float($value) || is_float($value2)) && (string) $value == (string) $value2) {
+                continue;
+            }
+
+            $result[$key] = $value;
+        }
+
+        return $result;
+    }
+
+    /**
+     * @return float
+     */
+    private static function resolveFloatEpsilon()
+    {
+        static $epsilon = null;
+
+        if ($epsilon === null) {
+            $epsilon = defined('PHP_FLOAT_EPSILON') ? PHP_FLOAT_EPSILON : 2.2204460492503E-16;
+        }
+
+        return $epsilon;
     }
 
     /**
