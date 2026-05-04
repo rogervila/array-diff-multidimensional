@@ -29,18 +29,18 @@ jobs:
           php-version: '8.5'
           extensions: zip, curl, mbstring, xml
           coverage: none
+          tools: composer:v2, phpbench
 
       # Step 3: Install dependencies for PR branch
       - name: Install Composer dependencies
         run: |
-          composer install --prefer-dist --no-progress --no-suggest
-          composer require --dev phpbench/phpbench
+          composer install --prefer-dist --no-progress
 
       # Step 4: Run benchmarks on PR branch
       - name: Run benchmarks on PR branch
         run: |
           mkdir -p tests/Benchmark
-          ./vendor/bin/phpbench run tests/Benchmark \
+          phpbench run tests/Benchmark \
             --report=default \
             --tag=pr \
             --retry-threshold=5 \
@@ -57,14 +57,13 @@ jobs:
       # Step 6: Install dependencies for base branch
       - name: Install Composer dependencies (base)
         run: |
-          composer install --prefer-dist --no-progress --no-suggest
-          composer require --dev phpbench/phpbench
+          composer install --prefer-dist --no-progress
 
       # Step 7: Run benchmarks on base branch
       - name: Run benchmarks on base branch
         run: |
           mkdir -p tests/Benchmark
-          ./vendor/bin/phpbench run tests/Benchmark \
+          phpbench run tests/Benchmark \
             --report=default \
             --tag=base \
             --retry-threshold=5 \
@@ -81,7 +80,7 @@ jobs:
         id: compare
         run: |
           mkdir -p tests/Benchmark
-          ./vendor/bin/phpbench run tests/Benchmark \
+          phpbench run tests/Benchmark \
             --report=aggregate \
             --ref=base \
             --retry-threshold=5 \
