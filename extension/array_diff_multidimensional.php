@@ -1,8 +1,7 @@
 <?php
 
-use native_types;
-
-function array_diff_multidimensional(array $array1, mixed $array2, bool $strict = true): array {
+function array_diff_multidimensional(array $array1, mixed $array2, bool $strict = true): array
+{
     if (!is_array($array2)) {
         return $array1;
     }
