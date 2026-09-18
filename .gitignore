@@ -4,6 +4,8 @@ composer.lock
 clover.xml
 junit-logfile.xml
 tmp/
+.php-version
+.vscode/
 
 # Agents
 .agents/

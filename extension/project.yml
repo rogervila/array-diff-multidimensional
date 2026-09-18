@@ -1,0 +1,74 @@
+# Output file path (equivalent to -o/--output)
+output: build/array_diff_multidimensional
+
+# If you only need to specify the artifact name, you can also use name
+# name does not change the output directory
+# name: myapp
+
+# Build mode: bin (executable) / lib (dynamic library) / ext (PHP extension)
+# Under WASM, you can also use library to generate a Component with a WIT export interface
+mode: ext
+
+# Optimization level, parallel jobs, and debug switch
+optimize: 2
+job: 8
+debug: false
+
+# Source list (files or directories)
+sources:
+  - array_diff_multidimensional.php
+
+# Ignored files or directories
+ignore:
+  - tests/
+  - vendor/
+
+# Build directory (relative paths are resolved relative to the directory containing this YAML file)
+build-dir: build/out
+
+# C++ standard version
+cxx-std: c++20
+
+# Target CPU / cross-compilation platform
+march: native
+# target-platform: x86_64-unknown-linux-gnu
+
+# WASI 0.2 output: only component or browser is allowed
+# wasm: component
+# wasm-browser-dir: generated
+# library mode can configure the WIT identifier
+# wasm-package: app:calculator@1.0.0
+# wasm-world: calculator
+
+# Custom C++ compiler (gcc/g++/clang/clang++, etc.)
+cpp-compiler: clang++
+
+# Additional C++ compilation options
+cxx-flags:
+  - -fvisibility=hidden
+  - -Wno-unused-parameter
+
+# Additional linker options
+ld-flags:
+  - -lcurl
+  - -lssl
+
+# Additional C++ header search paths (equivalent to -I)
+include-paths:
+  - /opt/mylib/include
+  - ../shared/headers
+
+# Preprocessor macro definitions (equivalent to -D)
+defines:
+  - ENABLE_LOGGING=1
+  - DEBUG_LEVEL=3
+
+# Runtime / build behavior
+sanitize: address
+profile: false
+no-literal-strings: false
+no-progress: true
+no-console: false
+dry: false
+lto: true
+format: true

@@ -1,0 +1,6 @@
+{
+    "require-dev": {
+        "php": "^8.5",
+        "swoole/typephp": "^0.9.0"
+    }
+}
